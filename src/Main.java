@@ -1,6 +1,7 @@
 // SkyPro
 // Курсовая работа «Введение в профессию и синтаксис языка»
 // Терских Константин, kostus.online.1974@yandex.ru, 2024
+// https://google.github.io/styleguide/javaguide.html
 
 import java.io.PrintWriter;
 import java.text.DecimalFormat;
@@ -15,7 +16,7 @@ public class Main {
     public static void main(String[] args) throws ParseException {
         final var charset = System.out.charset();
         System.out.printf("[charset: %s]%n", charset);
-        var os = new PrintWriter(System.out, true, charset);
+        final var os = new PrintWriter(System.out, true, charset);
 
         final DecimalFormat currencyFormat;
         NumberFormat numberFormat = NumberFormat.getCurrencyInstance(Locale.of(LANG_CODE));
@@ -28,7 +29,5 @@ public class Main {
         else {
             currencyFormat = new DecimalFormat("# ##.###0.00");
         }
-
-        currencyFormat.clone();
     }
 }

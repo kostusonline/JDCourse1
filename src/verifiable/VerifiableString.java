@@ -3,7 +3,7 @@
 // Терских Константин, kostus.online.1974@yandex.ru, 2024
 // https://google.github.io/styleguide/javaguide.html
 
-package employee;
+package verifiable;
 
 public class VerifiableString implements Verifiable<String> {
     public static final String ALLOWED_CHARS_DEFAULT =

@@ -5,21 +5,21 @@
 
 package employee;
 
+import person.Person;
+import verifiable.ExceptionVerify;
+
 import java.math.BigDecimal;
 
 public interface Employee {
     int getId();
 
-    String getLastName();
-
-    String getFirstName();
-
-    String getMiddleName();
+    Person getPerson();
 
     Divisions getDivision();
 
     void setDivision(Divisions division);
 
     BigDecimal getSalary();
+
     void setSalary(BigDecimal salary) throws ExceptionVerify;
 }

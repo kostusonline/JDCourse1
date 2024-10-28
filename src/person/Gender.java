@@ -3,28 +3,27 @@
 // Терских Константин, kostus.online.1974@yandex.ru, 2024
 // https://google.github.io/styleguide/javaguide.html
 
-package employee;
+package person;
 
-// Отделы компании
-public enum Divisions {
-    DIVISION_1 {
+public enum Gender {
+    NOT_SPECIFIED {
         @Override
         public String toString() {
-            return "1";
+            return "-";
         }
     },
 
-    DIVISION_2 {
+    MALE {
         @Override
         public String toString() {
-            return "2";
+            return "М";
         }
     },
 
-    DIVISION_3 {
+    FEMALE {
         @Override
         public String toString() {
-            return "3";
+            return "Ж";
         }
     },
 }

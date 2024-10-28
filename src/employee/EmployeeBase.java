@@ -38,11 +38,13 @@ https://my.sky.pro/student-cabinet/stream-module/21417/course-final-work/materia
  Распечатать ФИО всех сотрудников (метод ничего).
 */
 
+import person.Person;
+import verifiable.ExceptionVerify;
+import verifiable.Verifiable;
+
 import java.math.BigDecimal;
 
 public final class EmployeeBase implements Employee {
-    // Работа с идентификаторами сотрудников
-
     private static int idTop = 0;
 
     public static int getIdTop() {
@@ -55,50 +57,11 @@ public final class EmployeeBase implements Employee {
         return id;
     }
 
-    // ФИО сотрудника
+    private final Person person;
 
-    public final Verifiable<String> nameVerifier;
-
-    private String lastName;
-
-    public String getLastName() {
-        return lastName;
+    public Person getPerson() {
+        return person;
     }
-
-    private void setLastName(String lastName) throws ExceptionVerify {
-        if (nameVerifier != null && !nameVerifier.isGood(lastName)) {
-            throw new ExceptionVerify("Ошибка установки фамилии");
-        }
-        this.lastName = lastName;
-    }
-
-    private String firstName;
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    private void setFirstName(String firstName) throws ExceptionVerify {
-        if (nameVerifier != null && !nameVerifier.isGood(lastName)) {
-            throw new ExceptionVerify("Ошибка установки имени");
-        }
-        this.firstName = firstName;
-    }
-
-    private String middleName;
-
-    public String getMiddleName() {
-        return middleName;
-    }
-
-    private void setMiddleName(String middleName) throws ExceptionVerify {
-        if (nameVerifier != null && !nameVerifier.isGood(lastName)) {
-            throw new ExceptionVerify("Ошибка установки отчества");
-        }
-        this.middleName = middleName;
-    }
-
-    // Отдел сотрудника
 
     private Divisions division;
 
@@ -109,8 +72,6 @@ public final class EmployeeBase implements Employee {
     public void setDivision(Divisions division) {
         this.division = division;
     }
-
-    // Вознаграждение сотрудника по договору
 
     private final Verifiable<BigDecimal> salaryVerifier;
 
@@ -134,17 +95,11 @@ public final class EmployeeBase implements Employee {
         this.salary = salary;
     }
 
-    // Инициализация записи сотрудника
-
-    public EmployeeBase(VerifiableString nameVerifier, String lastName, String firstName, String middleName,
-                        Divisions division,
-                        VerifiableSalary salaryVerifier, BigDecimal salary) throws ExceptionVerify {
+    public EmployeeBase(Person person, Divisions division,
+                        Verifiable<BigDecimal> salaryVerifier, BigDecimal salary) throws ExceptionVerify {
         id = idTop++;
 
-        this.nameVerifier = nameVerifier;
-        setLastName(lastName);
-        setFirstName(firstName);
-        setMiddleName(middleName);
+        this.person = person;
 
         setDivision(division);
 
