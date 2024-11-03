@@ -116,7 +116,7 @@ public final class EmployeeBase implements Employee {
         hash = Objects.hash(this.division, this.salary, this.person);
     }
 
-    private final DecimalFormat currencyFormat;
+    private final DecimalFormat currencyFormat; //
 
     public EmployeeBase(Person person, Division division, Salary salary) throws VerifyException {
         id = idTop++;
