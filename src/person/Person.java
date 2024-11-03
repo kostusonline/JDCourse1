@@ -5,30 +5,27 @@
 
 package person;
 
-import verifiable.ExceptionVerify;
+import verifiable.VerifyException;
 
 import java.time.DateTimeException;
 import java.time.format.DateTimeFormatter;
 
 public interface Person {
-    // Здесь может быть ID: серия и номер паспорта, СНИЛС и т.п.,
-    // но для курсовой работы это слишком дискуссионный вопрос.
-
     // ФИО.
     // Может меняться, но это поведение не реализовано.
     // Может "не быть" отчества, но его всегда можно записать.
 
     String getLastName();
 
-    void setLastName(String lastName) throws ExceptionVerify;
+    void setLastName(String lastName) throws VerifyException;
 
     String getFirstName();
 
-    void setFirstName(String firstName) throws ExceptionVerify;
+    void setFirstName(String firstName) throws VerifyException;
 
     String getMiddleName();
 
-    void setMiddleName(String middleName) throws ExceptionVerify;
+    void setMiddleName(String middleName) throws VerifyException;
 
     // Дата рождения.
     // Вряд ли может меняться.

@@ -5,7 +5,7 @@
 
 package person.base;
 
-import verifiable.ExceptionVerify;
+import verifiable.VerifyException;
 import person.Gender;
 import person.Person;
 import verifiable.Verifiable;
@@ -27,9 +27,9 @@ public final class PersonBase implements Person {
         return lastName;
     }
 
-    public void setLastName(String lastName) throws ExceptionVerify {
+    public void setLastName(String lastName) throws VerifyException {
         if (nameVerifier != null && !nameVerifier.isGood(lastName)) {
-            throw new ExceptionVerify("Ошибка установки фамилии");
+            throw new VerifyException("Ошибка установки фамилии");
         }
         this.lastName = lastName;
         updateHash();
@@ -41,9 +41,9 @@ public final class PersonBase implements Person {
         return firstName;
     }
 
-    public void setFirstName(String firstName) throws ExceptionVerify {
+    public void setFirstName(String firstName) throws VerifyException {
         if (nameVerifier != null && !nameVerifier.isGood(firstName)) {
-            throw new ExceptionVerify("Ошибка установки имени");
+            throw new VerifyException("Ошибка установки имени");
         }
         this.firstName = firstName;
         updateHash();
@@ -55,9 +55,9 @@ public final class PersonBase implements Person {
         return middleName;
     }
 
-    public void setMiddleName(String middleName) throws ExceptionVerify {
+    public void setMiddleName(String middleName) throws VerifyException {
         if (nameVerifier != null && !nameVerifier.isGood(middleName)) {
-            throw new ExceptionVerify("Ошибка установки отчества");
+            throw new VerifyException("Ошибка установки отчества");
         }
         this.middleName = middleName;
         updateHash();
@@ -152,7 +152,7 @@ public final class PersonBase implements Person {
 
     public PersonBase(Verifiable<String> nameVerifier, String lastName, String firstName, String middleName,
                       int birthYear, int birthMonth, int birthDay,
-                      Gender gender) throws ExceptionVerify, DateTimeException {
+                      Gender gender) throws VerifyException, DateTimeException {
         freezeUpdateHash = true;
 
         this.nameVerifier = nameVerifier;
@@ -162,6 +162,39 @@ public final class PersonBase implements Person {
 
         setBirthDate(birthYear, birthMonth, birthDay);
         setGender(gender);
+
+        freezeUpdateHash = false;
+        updateHash();
+    }
+
+    public record Names(String lastName, String firstName, String middleName){}
+
+    public static Names parseNames(String fullName) {
+        String[] names = fullName.split(" ");
+        return new Names(names[0], names[1], names[2]);
+    }
+
+    public record DateParts(int birthYear, int birthMonth, int birthDay){}
+
+    public static DateParts parseDate(String birthDate) {
+        String[] date = birthDate.split("\\.");
+        return new DateParts(Integer.parseInt(date[2]), Integer.parseInt(date[1]), Integer.parseInt(date[0]));
+    }
+
+    public PersonBase(Verifiable<String> nameVerifier, String fullName, String birthDate, String genderSign)
+            throws VerifyException, DateTimeException {
+        freezeUpdateHash = true;
+
+        this.nameVerifier = nameVerifier;
+        var names = parseNames(fullName);
+        setLastName(names.lastName);
+        setFirstName(names.firstName);
+        setMiddleName(names.middleName);
+
+        var dateParts = parseDate(birthDate);
+        setBirthDate(dateParts.birthYear, dateParts.birthMonth, dateParts.birthDay);
+
+        setGender(Gender.getGender(genderSign));
 
         freezeUpdateHash = false;
         updateHash();

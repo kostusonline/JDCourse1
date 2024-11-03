@@ -3,11 +3,13 @@
 // Терских Константин, kostus.online.1974@yandex.ru, 2024
 // https://google.github.io/styleguide/javaguide.html
 
-package verifiable;
+package verifiable.implementations;
 
-public class VerifiableString implements Verifiable<String> {
+import verifiable.Verifiable;
+
+public class NameVerifier implements Verifiable<String> {
     public static final String ALLOWED_CHARS_DEFAULT =
-            "-абвгдеёжзийклмнопрстуфхцчшщъыьэюя" +
+            "- абвгдеёжзийклмнопрстуфхцчшщъыьэюя" +
                     "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ" +
                     "abcdefghijklmnopqrstuvwxyz" +
                     "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -18,7 +20,13 @@ public class VerifiableString implements Verifiable<String> {
     private final int minLength;
     private final int maxLength;
 
-    public VerifiableString(String allowedChars, int minLength, int maxLength) {
+    public NameVerifier() {
+        this.allowedChars = ALLOWED_CHARS_DEFAULT;
+        this.minLength = CHARS_MIN_DEFAULT;
+        this.maxLength = CHARS_MAX_DEFAULT;
+    }
+
+    public NameVerifier(String allowedChars, int minLength, int maxLength) {
         this.allowedChars = allowedChars;
         this.minLength = minLength;
         this.maxLength = maxLength;
@@ -39,7 +47,7 @@ public class VerifiableString implements Verifiable<String> {
             return false;
         }
 
-        if (allowedChars.length() == 0) {
+        if (allowedChars.isEmpty()) {
             return true;
         }
 

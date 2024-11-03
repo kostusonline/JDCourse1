@@ -6,7 +6,7 @@
 package employee;
 
 import person.Person;
-import verifiable.ExceptionVerify;
+import verifiable.VerifyException;
 
 import java.math.BigDecimal;
 
@@ -15,11 +15,11 @@ public interface Employee {
 
     Person getPerson();
 
-    Divisions getDivision();
+    Division getDivision();
 
-    void setDivision(Divisions division);
+    void setDivision(Division division);
 
     BigDecimal getSalary();
 
-    void setSalary(BigDecimal salary) throws ExceptionVerify;
+    void setSalary(BigDecimal salary) throws VerifyException;
 }

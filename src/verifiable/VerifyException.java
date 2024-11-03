@@ -5,8 +5,8 @@
 
 package verifiable;
 
-public class ExceptionVerify extends Exception{
-    public ExceptionVerify(String message){
+public class VerifyException extends Exception{
+    public VerifyException(String message){
         super(message);
     }
 }

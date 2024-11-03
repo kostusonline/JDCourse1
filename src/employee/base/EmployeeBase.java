@@ -3,7 +3,7 @@
 // Терских Константин, kostus.online.1974@yandex.ru, 2024
 // https://google.github.io/styleguide/javaguide.html
 
-package employee;
+package employee.base;
 
 /* Выдержка из условий задания (copy/paste на 27.10.2024)
 https://my.sky.pro/student-cabinet/stream-module/21417/course-final-work/materials
@@ -38,8 +38,10 @@ https://my.sky.pro/student-cabinet/stream-module/21417/course-final-work/materia
  Распечатать ФИО всех сотрудников (метод ничего).
 */
 
+import employee.Division;
+import employee.Employee;
 import person.Person;
-import verifiable.ExceptionVerify;
+import verifiable.VerifyException;
 import verifiable.Verifiable;
 
 import java.math.BigDecimal;
@@ -63,13 +65,13 @@ public final class EmployeeBase implements Employee {
         return person;
     }
 
-    private Divisions division;
+    private Division division;
 
-    public Divisions getDivision() {
+    public Division getDivision() {
         return division;
     }
 
-    public void setDivision(Divisions division) {
+    public void setDivision(Division division) {
         this.division = division;
     }
 
@@ -83,20 +85,20 @@ public final class EmployeeBase implements Employee {
         return salary;
     }
 
-    public void setSalary(BigDecimal salary) throws ExceptionVerify {
+    public void setSalary(BigDecimal salary) throws VerifyException {
         if (salaryVerifier != null && !salaryVerifier.isGood(salary)) {
-            throw new ExceptionVerify("Ошибка установки вознаграждения");
+            throw new VerifyException("Ошибка установки вознаграждения");
         }
 
         // будем думать, что КЗОТ работает и нельзя уменьшать размер вознаграждения
         if (this.salary != null && salary.compareTo(this.salary) < 0) {
-            throw new ExceptionVerify("Назначаемое вознаграждение меньше установленного");
+            throw new VerifyException("Назначаемое вознаграждение меньше установленного");
         }
         this.salary = salary;
     }
 
-    public EmployeeBase(Person person, Divisions division,
-                        Verifiable<BigDecimal> salaryVerifier, BigDecimal salary) throws ExceptionVerify {
+    public EmployeeBase(Person person, Division division,
+                        Verifiable<BigDecimal> salaryVerifier, BigDecimal salary) throws VerifyException {
         id = idTop++;
 
         this.person = person;
@@ -105,5 +107,17 @@ public final class EmployeeBase implements Employee {
 
         this.salaryVerifier = salaryVerifier;
         setSalary(salary);
+    }
+
+    public EmployeeBase(Person person, String divisionSign,
+                        Verifiable<BigDecimal> salaryVerifier, double salaryDouble) throws VerifyException {
+        id = idTop++;
+
+        this.person = person;
+
+        setDivision(Division.getDivision(divisionSign));
+
+        this.salaryVerifier = salaryVerifier;
+        setSalary(new BigDecimal(salaryDouble));
     }
 }

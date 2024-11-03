@@ -25,5 +25,13 @@ public enum Gender {
         public String toString() {
             return "Ж";
         }
-    },
+    };
+
+    public static Gender getGender(String sign) {
+        return switch (sign.toUpperCase()) {
+            case "М", "M" -> MALE;
+            case "Ж", "F"-> FEMALE;
+            default -> NOT_SPECIFIED;
+        };
+    }
 }
