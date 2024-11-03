@@ -21,7 +21,6 @@ import java.util.Locale;
 
 public class Main {
     public static final String DIVIDER = " -------------------------------------";
-    public static final String LANG_CODE = "RU";
     public static final String CURRENCY_FORMAT_DEFAULT = "#,###.##";
 
     private static PrintWriter out;
@@ -31,14 +30,7 @@ public class Main {
         final var charset = System.out.charset();
         System.out.printf("[charset: %s]%n", charset);
         out = new PrintWriter(System.out, true, charset);
-
-        NumberFormat numberFormat = NumberFormat.getCurrencyInstance(Locale.of(LANG_CODE));
-        if (numberFormat instanceof DecimalFormat df) {
-            currencyFormat = df;
-        }
-        else {
-            currencyFormat = new DecimalFormat(CURRENCY_FORMAT_DEFAULT);
-        }
+        currencyFormat = new DecimalFormat(CURRENCY_FORMAT_DEFAULT);
     }
 
     public static final int EMPLOYEE_COUNT_DEFAULT = 10;
@@ -54,16 +46,24 @@ public class Main {
         int i = 0;
         employees[i++] = new EmployeeBase(
                 new PersonBase(nameVerifier, "Иванов Иван Иванович", "16.04.1974", "М"),
-                "1", salaryVerifier, 350_000);
+                "1", salaryVerifier, currencyFormat, 350_000);
 
         employees[i++] = new EmployeeBase(
                 new PersonBase(nameVerifier, "Сидоров", "Семён", "Семёнович",
                         1964, 8, 6, Gender.MALE),
                 Division.DIVISION_1,
-                salaryVerifier, new BigDecimal(144_500));
+                salaryVerifier, currencyFormat, new BigDecimal(144_500));
 
         employees[i++] = new EmployeeBase(
                 new PersonBase(nameVerifier, "Лебедева Елена Петровна", "05.02.1990", "Ж"),
-                Division.DIVISION_3, salaryVerifier, new BigDecimal(18_300));
+                Division.DIVISION_3, salaryVerifier, currencyFormat, new BigDecimal(18_300));
+
+        // Получить список всех сотрудников со всеми имеющимися по ним данными
+        // (вывести в консоль значения всех полей (toString))
+        for (Employee employee : employees) {
+            if (employee != null) {
+                out.println(employee);
+            }
+        }
     }
 }

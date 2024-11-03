@@ -116,6 +116,7 @@ public final class PersonBase implements Person {
         }
 
         PersonBase that = (PersonBase) o;
+
         // Сначала самые быстрые сравнения, потом строки.
         return this.birthYear == that.birthYear &&
                 this.birthMonth == that.birthMonth &&
@@ -198,5 +199,11 @@ public final class PersonBase implements Person {
 
         freezeUpdateHash = false;
         updateHash();
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s %s %s, %s, %02d.%02d.%d",
+                lastName, firstName, middleName, gender, birthDay, birthMonth, birthYear);
     }
 }
