@@ -42,6 +42,7 @@ import employee.Division;
 import employee.Employee;
 import person.Person;
 import person.base.PersonBase;
+import salary.Salary;
 import verifiable.VerifyException;
 import verifiable.Verifiable;
 
@@ -78,27 +79,11 @@ public final class EmployeeBase implements Employee {
         this.division = division;
     }
 
-    private final Verifiable<BigDecimal> salaryVerifier;
+    private Salary salary;
 
-    // Базовое хранилище - BigDecimal
-    // (для возможных последующих расширений валютной арифметики)
-    private BigDecimal salary;
+    public Salary getSalary() { return salary; }
 
-    public BigDecimal getSalary() {
-        return salary;
-    }
-
-    public void setSalary(BigDecimal salary) throws VerifyException {
-        if (salaryVerifier != null && !salaryVerifier.isGood(salary)) {
-            throw new VerifyException("Ошибка установки вознаграждения");
-        }
-
-        // будем думать, что КЗОТ работает и нельзя уменьшать размер вознаграждения
-        if (this.salary != null && salary.compareTo(this.salary) < 0) {
-            throw new VerifyException("Назначаемое вознаграждение меньше установленного");
-        }
-        this.salary = salary;
-    }
+    public void setSalary(Salary salary) { this.salary = salary; }
 
     // Переопределим equals и hashCode
 
@@ -112,9 +97,7 @@ public final class EmployeeBase implements Employee {
         }
 
         EmployeeBase that = (EmployeeBase) o;
-        return this.division.equals(that.division) &&
-                this.salary.equals(that.salary) &&
-                this.person.equals(that.person);
+        return this.division.equals(that.division) && this.salary.equals(that.salary) && this.person.equals(that.person);
         // (От быстрых сравнений к медленным.)
     }
 
@@ -135,23 +118,17 @@ public final class EmployeeBase implements Employee {
 
     private final DecimalFormat currencyFormat;
 
-    public EmployeeBase(Person person, Division division,
-                        Verifiable<BigDecimal> salaryVerifier,
-                        DecimalFormat currencyFormat, BigDecimal salary) throws VerifyException {
+    public EmployeeBase(Person person, Division division, Salary salary) throws VerifyException {
         id = idTop++;
 
         this.person = person;
 
         setDivision(division);
 
-        this.salaryVerifier = salaryVerifier;
-        this.currencyFormat = currencyFormat;
         setSalary(salary);
     }
 
-    public EmployeeBase(Person person, String divisionSign,
-                        Verifiable<BigDecimal> salaryVerifier,
-                        DecimalFormat currencyFormat, double salaryDouble) throws VerifyException {
+    public EmployeeBase(Person person, String divisionSign, Verifiable<BigDecimal> salaryVerifier, DecimalFormat currencyFormat, double salaryDouble) throws VerifyException {
         id = idTop++;
 
         this.person = person;
@@ -160,17 +137,15 @@ public final class EmployeeBase implements Employee {
 
         this.salaryVerifier = salaryVerifier;
         this.currencyFormat = currencyFormat;
-        setSalary(new BigDecimal(salaryDouble));
+        getSalary().setSalary(new BigDecimal(salaryDouble));
     }
 
     @Override
     public String toString() {
-        return String.format("ID: %d, %s, отдел %s, вознаграждение: %s руб/мес",
-                id, person, division, currencyFormat.format(salary.doubleValue()));
+        return String.format("ID: %d, %s, отдел %s, вознаграждение: %s руб/мес", id, person, division, currencyFormat.format(salary.doubleValue()));
     }
 
     public String toShortString() {
-        return String.format("%s %s %s",
-                person.getLastName(), person.getFirstName(), person.getMiddleName());
+        return String.format("%s %s %s", person.getLastName(), person.getFirstName(), person.getMiddleName());
     }
 }

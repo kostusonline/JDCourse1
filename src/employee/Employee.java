@@ -6,9 +6,7 @@
 package employee;
 
 import person.Person;
-import verifiable.VerifyException;
-
-import java.math.BigDecimal;
+import salary.Salary;
 
 public interface Employee {
     int getId();
@@ -19,7 +17,7 @@ public interface Employee {
 
     void setDivision(Division division);
 
-    BigDecimal getSalary();
+    Salary getSalary();
 
-    void setSalary(BigDecimal salary) throws VerifyException;
+    void setSalary(Salary salary);
 }

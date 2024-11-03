@@ -9,27 +9,24 @@ import verifiable.Verifiable;
 
 import java.math.BigDecimal;
 
-public class SalaryVerifier implements Verifiable<BigDecimal> {
+public class SalaryVerifier implements Verifiable<Double> {
     public static final double SALARY_MIN_DEFAULT = 10_000; // условный МРОТ
     public static final double SALARY_MAX_DEFAULT = 500_000; // да куда уже больше
 
-    private final BigDecimal minSalary;
-    private final BigDecimal maxSalary;
+    private final double minSalary;
+    private final double maxSalary;
 
     public SalaryVerifier() {
-        this.minSalary = new BigDecimal(SALARY_MIN_DEFAULT);
-        this.maxSalary = new BigDecimal(SALARY_MAX_DEFAULT);
+        this.minSalary = SALARY_MIN_DEFAULT;
+        this.maxSalary = SALARY_MAX_DEFAULT;
     }
 
-    public SalaryVerifier(BigDecimal minSalary, BigDecimal maxSalary) {
+    public SalaryVerifier(double minSalary, double maxSalary) {
         this.minSalary = minSalary;
         this.maxSalary = maxSalary;
     }
 
-    public boolean isGood(BigDecimal salary) {
-        if (salary == null) {
-            return false;
-        }
-        return salary.compareTo(minSalary) > 0 && salary.compareTo(maxSalary) < 0;
+    public boolean isGood(Double salary) {
+        return minSalary <= salary && salary <= maxSalary;
     }
 }

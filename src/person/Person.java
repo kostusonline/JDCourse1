@@ -12,8 +12,6 @@ import java.time.format.DateTimeFormatter;
 
 public interface Person {
     // ФИО.
-    // Может меняться, но это поведение не реализовано.
-    // Может "не быть" отчества, но его всегда можно записать.
 
     String getLastName();
 
@@ -28,7 +26,6 @@ public interface Person {
     void setMiddleName(String middleName) throws VerifyException;
 
     // Дата рождения.
-    // Вряд ли может меняться.
 
     String getBirthDate(DateTimeFormatter dtFormatter);
 
