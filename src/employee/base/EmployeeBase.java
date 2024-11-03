@@ -43,6 +43,7 @@ import employee.Employee;
 import person.Person;
 import person.base.PersonBase;
 import salary.Salary;
+import salary.base.SalaryBase;
 import verifiable.VerifyException;
 import verifiable.Verifiable;
 
@@ -97,8 +98,11 @@ public final class EmployeeBase implements Employee {
         }
 
         EmployeeBase that = (EmployeeBase) o;
-        return this.division.equals(that.division) && this.salary.equals(that.salary) && this.person.equals(that.person);
-        // (От быстрых сравнений к медленным.)
+
+        // От быстрых сравнений к медленным.
+        return this.division.equals(that.division) &&
+                this.salary.equals(that.salary) &&
+                this.person.equals(that.person);
     }
 
     @Override
@@ -113,36 +117,35 @@ public final class EmployeeBase implements Employee {
         if (freezeUpdateHash) {
             return;
         }
-        hash = Objects.hash(this.division, this.salary, this.person);
+        hash = Objects.hash(this.division, this.salary.hashCode(), this.person.hashCode());
     }
 
-    private final DecimalFormat currencyFormat; //
-
-    public EmployeeBase(Person person, Division division, Salary salary) throws VerifyException {
+    public EmployeeBase(Person person,
+                        Division division,
+                        Salary salary) throws VerifyException {
         id = idTop++;
 
         this.person = person;
 
         setDivision(division);
-
         setSalary(salary);
     }
 
-    public EmployeeBase(Person person, String divisionSign, Verifiable<BigDecimal> salaryVerifier, DecimalFormat currencyFormat, double salaryDouble) throws VerifyException {
+    public EmployeeBase(Person person,
+                        String divisionSign,
+                        Verifiable<Double> salaryVerifier, double salaryValue) throws VerifyException {
         id = idTop++;
 
         this.person = person;
 
         setDivision(Division.getDivision(divisionSign));
 
-        this.salaryVerifier = salaryVerifier;
-        this.currencyFormat = currencyFormat;
-        getSalary().setSalary(new BigDecimal(salaryDouble));
+        salary = new SalaryBase(salaryVerifier, salaryValue, null);
     }
 
     @Override
     public String toString() {
-        return String.format("ID: %d, %s, отдел %s, вознаграждение: %s руб/мес", id, person, division, currencyFormat.format(salary.doubleValue()));
+        return String.format("ID: %d, %s, отдел %s, %s", id, person, division, salary);
     }
 
     public String toShortString() {

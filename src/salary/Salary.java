@@ -12,5 +12,5 @@ public interface Salary {
 
     void setValue(double salary) throws VerifyException;
 
-    void setIndexation(double percent) throws VerifyException;
+    void performIndexation(double positivePercent) throws VerifyException;
 }

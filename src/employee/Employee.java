@@ -20,4 +20,6 @@ public interface Employee {
     Salary getSalary();
 
     void setSalary(Salary salary);
+
+    String toShortString();
 }
