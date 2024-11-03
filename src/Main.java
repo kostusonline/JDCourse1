@@ -72,11 +72,11 @@ public class Main {
 
         // Получить список всех сотрудников со всеми имеющимися по ним данными
         // (вывести в консоль значения всех полей (toString))
-        for (Employee employee : employees) {
-            if (employee != null) {
-                out.println(employee);
-            }
-        }
+//        for (Employee employee : employees) {
+//            if (employee != null) {
+//                out.println(employee);
+//            }
+//        }
 
         for (Employee employee : employees) {
             if (employee != null) {
