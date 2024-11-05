@@ -3,11 +3,7 @@
 // Терских Константин, kostus.online.1974@yandex.ru, 2024
 // https://google.github.io/styleguide/javaguide.html
 
-package verifiable.implementations;
-
-import verifiable.Verifiable;
-
-public class NameVerifier implements Verifiable<String> {
+public class NameVerifier {
     public static final String ALLOWED_CHARS_DEFAULT =
             "- абвгдеёжзийклмнопрстуфхцчшщъыьэюя" +
                     "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ" +

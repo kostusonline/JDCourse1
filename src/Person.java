@@ -3,21 +3,13 @@
 // Терских Константин, kostus.online.1974@yandex.ru, 2024
 // https://google.github.io/styleguide/javaguide.html
 
-package person.base;
-
-import verifiable.VerifyException;
-import person.Gender;
-import person.Person;
-import verifiable.Verifiable;
-
-import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
-public final class PersonBase implements Person {
+public final class Person {
 
-    public final Verifiable<String> nameVerifier;
+    public final NameVerifier nameVerifier;
 
     // ФИО
 
@@ -27,9 +19,9 @@ public final class PersonBase implements Person {
         return lastName;
     }
 
-    public void setLastName(String lastName) throws VerifyException {
+    public void setLastName(String lastName) {
         if (nameVerifier != null && !nameVerifier.isGood(lastName)) {
-            throw new VerifyException("Ошибка установки фамилии");
+            return;
         }
         this.lastName = lastName;
         updateHash();
@@ -41,9 +33,9 @@ public final class PersonBase implements Person {
         return firstName;
     }
 
-    public void setFirstName(String firstName) throws VerifyException {
+    public void setFirstName(String firstName) {
         if (nameVerifier != null && !nameVerifier.isGood(firstName)) {
-            throw new VerifyException("Ошибка установки имени");
+            return;
         }
         this.firstName = firstName;
         updateHash();
@@ -55,9 +47,9 @@ public final class PersonBase implements Person {
         return middleName;
     }
 
-    public void setMiddleName(String middleName) throws VerifyException {
+    public void setMiddleName(String middleName) {
         if (nameVerifier != null && !nameVerifier.isGood(middleName)) {
-            throw new VerifyException("Ошибка установки отчества");
+            return;
         }
         this.middleName = middleName;
         updateHash();
@@ -83,7 +75,7 @@ public final class PersonBase implements Person {
         return result;
     }
 
-    public void setBirthDate(int year, int month, int day) throws DateTimeException {
+    public void setBirthDate(int year, int month, int day) {
         LocalDate date = LocalDate.of(year, month, day);
         birthYear = year;
         birthMonth = month;
@@ -115,7 +107,7 @@ public final class PersonBase implements Person {
             return false;
         }
 
-        PersonBase that = (PersonBase) o;
+        Person that = (Person) o;
 
         // Сначала самые быстрые сравнения, потом строки.
         return this.birthYear == that.birthYear &&
@@ -151,9 +143,8 @@ public final class PersonBase implements Person {
 
     // Инициализация
 
-    public PersonBase(Verifiable<String> nameVerifier, String lastName, String firstName, String middleName,
-                      int birthYear, int birthMonth, int birthDay,
-                      Gender gender) throws VerifyException, DateTimeException {
+    public Person(NameVerifier nameVerifier, String lastName, String firstName, String middleName,
+                  int birthYear, int birthMonth, int birthDay, Gender gender) {
         freezeUpdateHash = true;
 
         this.nameVerifier = nameVerifier;
@@ -168,34 +159,42 @@ public final class PersonBase implements Person {
         updateHash();
     }
 
-    public record Names(String lastName, String firstName, String middleName){}
-
-    public static Names parseNames(String fullName) {
-        String[] names = fullName.split(" ");
-        return new Names(names[0], names[1], names[2]);
+    public static String[] parseNames(String fullName) {
+        String[] nameParts = fullName.split(" ");
+        if (nameParts.length != 3) {
+            return null;
+        }
+        return nameParts;
     }
 
-    public record DateParts(int birthYear, int birthMonth, int birthDay){}
-
-    public static DateParts parseDate(String birthDate) {
+    public static int[] parseDate(String birthDate) {
         String[] date = birthDate.split("\\.");
-        return new DateParts(Integer.parseInt(date[2]), Integer.parseInt(date[1]), Integer.parseInt(date[0]));
+        if (date.length != 3) {
+            return null;
+        }
+
+        int[] result = new int[3];
+        result[0] = Integer.parseInt(date[0]);
+        result[1] = Integer.parseInt(date[1]);
+        result[2] = Integer.parseInt(date[2]);
+        return result;
     }
 
-    public PersonBase(Verifiable<String> nameVerifier, String fullName, String birthDate, String genderSign)
-            throws VerifyException, DateTimeException {
+    public Person(NameVerifier nameVerifier, String fullName, String birthDate, char genderSign) {
         freezeUpdateHash = true;
 
         this.nameVerifier = nameVerifier;
         var names = parseNames(fullName);
-        setLastName(names.lastName);
-        setFirstName(names.firstName);
-        setMiddleName(names.middleName);
+        assert names != null;
+        setLastName(names[0]);
+        setFirstName(names[1]);
+        setMiddleName(names[2]);
 
         var dateParts = parseDate(birthDate);
-        setBirthDate(dateParts.birthYear, dateParts.birthMonth, dateParts.birthDay);
+        assert dateParts != null;
+        setBirthDate(dateParts[2], dateParts[1], dateParts[0]);
 
-        setGender(Gender.getGender(genderSign));
+        setGender(new Gender(genderSign));
 
         freezeUpdateHash = false;
         updateHash();

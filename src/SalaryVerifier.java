@@ -3,13 +3,7 @@
 // Терских Константин, kostus.online.1974@yandex.ru, 2024
 // https://google.github.io/styleguide/javaguide.html
 
-package verifiable.implementations;
-
-import verifiable.Verifiable;
-
-import java.math.BigDecimal;
-
-public class SalaryVerifier implements Verifiable<Double> {
+public class SalaryVerifier {
     public static final double SALARY_MIN_DEFAULT = 10_000; // условный МРОТ
     public static final double SALARY_MAX_DEFAULT = 500_000; // да куда уже больше
 

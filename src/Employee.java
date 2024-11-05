@@ -3,8 +3,6 @@
 // Терских Константин, kostus.online.1974@yandex.ru, 2024
 // https://google.github.io/styleguide/javaguide.html
 
-package employee.base;
-
 /* Выдержка из условий задания (copy/paste на 27.10.2024)
 https://my.sky.pro/student-cabinet/stream-module/21417/course-final-work/materials
 
@@ -38,20 +36,9 @@ https://my.sky.pro/student-cabinet/stream-module/21417/course-final-work/materia
  Распечатать ФИО всех сотрудников (метод ничего).
 */
 
-import employee.Division;
-import employee.Employee;
-import person.Person;
-import person.base.PersonBase;
-import salary.Salary;
-import salary.base.SalaryBase;
-import verifiable.VerifyException;
-import verifiable.Verifiable;
-
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.util.Objects;
 
-public final class EmployeeBase implements Employee {
+public final class Employee {
     private static int idTop = 0;
 
     public static int getIdTop() {
@@ -97,7 +84,7 @@ public final class EmployeeBase implements Employee {
             return false;
         }
 
-        EmployeeBase that = (EmployeeBase) o;
+        Employee that = (Employee) o;
 
         // От быстрых сравнений к медленным.
         return this.division.equals(that.division) &&
@@ -120,9 +107,9 @@ public final class EmployeeBase implements Employee {
         hash = Objects.hash(this.division, this.salary.hashCode(), this.person.hashCode());
     }
 
-    public EmployeeBase(Person person,
-                        Division division,
-                        Salary salary) throws VerifyException {
+    public Employee(Person person,
+                    Division division,
+                    Salary salary) {
         id = idTop++;
 
         this.person = person;
@@ -131,16 +118,16 @@ public final class EmployeeBase implements Employee {
         setSalary(salary);
     }
 
-    public EmployeeBase(Person person,
-                        String divisionSign,
-                        Verifiable<Double> salaryVerifier, double salaryValue) throws VerifyException {
+    public Employee(Person person,
+                    String divisionSign,
+                    SalaryVerifier salaryVerifier, double salaryValue) {
         id = idTop++;
 
         this.person = person;
 
-        setDivision(Division.getDivision(divisionSign));
+        setDivision(new Division(divisionSign));
 
-        salary = new SalaryBase(salaryVerifier, salaryValue, null);
+        salary = new Salary(salaryVerifier, salaryValue, null);
     }
 
     @Override
