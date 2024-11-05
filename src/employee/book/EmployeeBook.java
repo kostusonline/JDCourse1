@@ -10,12 +10,13 @@ import employee.Employee;
 import java.util.List;
 
 public interface EmployeeBook {
-    // CRUD
+
     boolean addEntry(Employee employee);
 
     Employee getEntry(int id);
 
-    List<Employee> getEntries(String lastName, String firstName, String middleName);
+    List<Employee> getEntries(String lastName, String firstName, String middleName,
+                              String division, String gender);
 
     boolean removeEntry(int id);
 
