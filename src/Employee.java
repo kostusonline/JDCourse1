@@ -3,75 +3,90 @@
 // Терских Константин, kostus.online.1974@yandex.ru, 2024
 // https://google.github.io/styleguide/javaguide.html
 
-/* Выдержка из условий задания (copy/paste на 27.10.2024)
-https://my.sky.pro/student-cabinet/stream-module/21417/course-final-work/materials
-
-Базовая сложность
- Создать класс Employee, который содержит информацию о
-    ФИО,
-    отделе и
-    зарплате сотрудника.
- Отделы для простоты должны быть названы от 1 до 5.
-
- Добавить статическую переменную-счетчик, которая будет отвечать за id.
- Добавить в класс Employee поле id, которое проставляется из счетчика, а затем счетчик увеличивает свое значение.
-
- Скрыть прямой доступ к полям класса Employee и добавить возможность получать значения полей (геттеры) и
- устанавливать значения полей отдела и зарплаты (сеттеры).
-
- Реализовать в классе Employee контракты equals и hashCode.
-
- По-умолчанию все поля должны передаваться через конструктор (кроме id) и заполняться в нем
- (включая id, который нужно получить из счетчика).
-
- Создать внутри класса Main метод main и поле типа Employee[10], которое будет выполнять роль "хранилища"
- для записей о сотрудниках.
- Создать статические методы, которые будут взаимодействовать с массивом из пункта 6 и возвращать результат:
-
- Получить список всех сотрудников со всеми имеющимися по ним данными (вывести в консоль значения всех полей (toString));
- Посчитать сумму затрат на ЗП в месяц;
- Найти сотрудника с минимальной ЗП;
- Найти сотрудника с максимальной ЗП;
- Подсчитать среднее значение зарплат (можно использовать для этого метод из пункта b);
- Распечатать ФИО всех сотрудников (метод ничего).
-*/
-
 import java.util.Objects;
 
+/**
+ * Сотрудник.
+ *
+ * @author Терских Константин, kostus.online.1974@yandex.ru, 2024
+ * @version 1.1
+ */
 public final class Employee {
+    /**
+     * Статический счётчик создаваемых экземпляров классов.
+     */
     private static int idTop = 0;
 
+    /**
+     * Получение значения счётчика {@link Employee#idTop}.
+     */
     public static int getIdTop() {
         return idTop;
     }
 
+    /**
+     * Идентификатор сотрудника.<br>
+     * Устанавливается один раз в конструкторе.
+     */
     private final int id;
 
+    /**
+     * Получение id сотрудника {@link Employee#id}.<br>
+     * Устанавливается неявно в конструкторе.
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     * Сотрудник. Экземпляр класса {@link Person}.<br>
+     * Внедряется только через конструктор.
+     */
     private final Person person;
 
+    /**
+     * Получение ссылки на экземпляр сотрудника {@link Employee#person}.
+     */
     public Person getPerson() {
         return person;
     }
 
+    /**
+     * Отдел, к которому прикреплён сотрудник.<br>
+     * Внедряется через конструктор, но может быть заменён в дальнейшем.
+     */
     private Division division;
 
+    /**
+     * Получение отдела сотрудника {@link Employee#division}.
+     */
     public Division getDivision() {
         return division;
     }
 
+    /**
+     * Установка отдела сотрудника {@link Employee#division}.
+     */
     public void setDivision(Division division) {
         this.division = division;
     }
 
+    /**
+     * Зарплата сотрудника.<br>
+     * Экземпляр внедряется только через конструктор, но параметры могут быть изменены в любой момент.
+     */
     private Salary salary;
 
-    public Salary getSalary() { return salary; }
+    /**
+     * Получение зарплаты сотрудника {@link Employee#salary}.
+     */
+    public Salary getSalary() {
+        return salary;
+    }
 
-    public void setSalary(Salary salary) { this.salary = salary; }
+    public void setSalary(Salary salary) {
+        this.salary = salary;
+    }
 
     // Переопределим equals и hashCode
 
@@ -110,24 +125,47 @@ public final class Employee {
     public Employee(Person person,
                     Division division,
                     Salary salary) {
+        if (person == null) {
+            throw new IllegalArgumentException("Параметр person не должен быть null");
+        } else if (division == null) {
+            throw new IllegalArgumentException("Параметр division не должен быть null");
+        } else if (salary == null) {
+            throw new IllegalArgumentException("Параметр salary не должен быть  null");
+        }
+
+        this.freezeUpdateHash = true;
+
         id = idTop++;
 
         this.person = person;
-
         setDivision(division);
         setSalary(salary);
+
+        updateHash();
+        this.freezeUpdateHash = false;
     }
 
     public Employee(Person person,
                     String divisionSign,
                     SalaryVerifier salaryVerifier, double salaryValue) {
+        if (person == null) {
+            throw new IllegalArgumentException("person == null");
+        } else if (divisionSign == null) {
+            throw new IllegalArgumentException("divisionSign == null");
+        } else if (salaryVerifier == null) {
+            throw new IllegalArgumentException("salaryVerifier == null");
+        }
+
+        this.freezeUpdateHash = true;
+
         id = idTop++;
 
         this.person = person;
-
         setDivision(new Division(divisionSign));
-
         salary = new Salary(salaryVerifier, salaryValue, null);
+
+        updateHash();
+        this.freezeUpdateHash = false;
     }
 
     @Override

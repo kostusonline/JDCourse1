@@ -28,12 +28,12 @@ public final class Salary {
         salary = newSalary;
     }
 
-    public void performIndexation(double positivePercent) {
-        if (positivePercent < 0) {
+    public void performIndexing(double positivePercentage) {
+        if (positivePercentage < 0) {
             return;
         }
 
-        double delta = salary * positivePercent / 100;
+        double delta = salary * positivePercentage / 100;
         salary += delta;
     }
 
@@ -63,7 +63,12 @@ public final class Salary {
     private final DecimalFormat currencyFormat; //
 
     public Salary(SalaryVerifier salaryVerifier,
-                  double salary, DecimalFormat currencyFormat) {
+                  double salary,
+                  DecimalFormat currencyFormat) {
+        if (salaryVerifier == null) {
+            throw new NullPointerException("Параметр salaryVerifier не должен быть null");
+        }
+
         this.salaryVerifier = salaryVerifier;
         setValue(salary);
 

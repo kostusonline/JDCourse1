@@ -4,8 +4,6 @@
 // https://google.github.io/styleguide/javaguide.html
 
 import java.io.PrintWriter;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.text.DecimalFormat;
 
 public class Main {
