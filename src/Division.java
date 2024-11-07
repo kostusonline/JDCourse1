@@ -1,14 +1,18 @@
 // SkyPro
 // Курсовая работа «Введение в профессию и синтаксис языка»
-// Терских Константин, kostus.online.1974@yandex.ru, 2024
+// Константин Терских, kostus.online.1974@yandex.ru, 2024
 // https://google.github.io/styleguide/javaguide.html
+
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
 
 /**
  * Отдел компании.<br>
  * (Здесь должен быть enum c методами, но enum ещё не проходили.
  * С enum всё было бы немного компактнее и вообще логичней.)
  *
- * @author Терских Константин, kostus.online.1974@yandex.ru, 2024
+ * @author Константин Терских, kostus.online.1974@yandex.ru, 2024
  * @version 1.1
  */
 public class Division {
@@ -25,6 +29,7 @@ public class Division {
     /**
      * Название отдела
      */
+    @NotNull
     private final String name;
 
     /**
@@ -33,7 +38,7 @@ public class Division {
      * @param name название отдела.
      *             Устанавливает название отдела {@link Division#name}.
      */
-    public Division(String name) {
+    public Division(@NotNull String name) {
         this.name = switch (name) {
             case "1" /* ... */ -> DIVISION_1;
             case "2" /* ... */ -> DIVISION_2;
@@ -47,6 +52,7 @@ public class Division {
     /**
      * Получение названия отдела {@link Division#name}.
      */
+    @NotNull
     public String getName() {
         return name;
     }
@@ -66,6 +72,11 @@ public class Division {
         }
 
         Division that = (Division) o;
-        return name.equals(that.name);
+        return Objects.equals(name, that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
     }
 }

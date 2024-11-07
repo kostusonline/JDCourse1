@@ -1,6 +1,6 @@
 // SkyPro
 // Курсовая работа «Введение в профессию и синтаксис языка»
-// Терских Константин, kostus.online.1974@yandex.ru, 2024
+// Константин Терских, kostus.online.1974@yandex.ru, 2024
 // https://google.github.io/styleguide/javaguide.html
 
 import java.util.Objects;
@@ -8,7 +8,7 @@ import java.util.Objects;
 /**
  * Сотрудник.
  *
- * @author Терских Константин, kostus.online.1974@yandex.ru, 2024
+ * @author Константин Терских, kostus.online.1974@yandex.ru, 2024
  * @version 1.1
  */
 public final class Employee {
@@ -65,7 +65,10 @@ public final class Employee {
     }
 
     /**
-     * Установка отдела сотрудника {@link Employee#division}.
+     * Установка отдела сотрудника {@link Employee#division}.<br>
+     * Отделы создаются отдельно и через конструктор внедряется уже готовый<br>
+     * внешний экземпляр класса {@link Division}.<br>
+     * Поэтому здесь есть возможность установить любой другой отдел.
      */
     public void setDivision(Division division) {
         this.division = division;
@@ -73,19 +76,18 @@ public final class Employee {
 
     /**
      * Зарплата сотрудника.<br>
-     * Экземпляр внедряется только через конструктор, но параметры могут быть изменены в любой момент.
+     * Экземпляр {@link Salary} внедряется только через конструктор.<br>
+     * Изменение зарплаты сотрудника производится через методы<br>
+     * {@link Salary#setValue(double)} и {@link Salary#performIndexing(double)}.
      */
-    private Salary salary;
+    private final Salary salary;
 
     /**
-     * Получение зарплаты сотрудника {@link Employee#salary}.
+     * Получение зарплаты сотрудника {@link Employee#salary}.<br>
+     * См. {@link Employee#salary}.
      */
     public Salary getSalary() {
         return salary;
-    }
-
-    public void setSalary(Salary salary) {
-        this.salary = salary;
     }
 
     // Переопределим equals и hashCode
@@ -102,24 +104,26 @@ public final class Employee {
         Employee that = (Employee) o;
 
         // От быстрых сравнений к медленным.
-        return this.division.equals(that.division) &&
-                this.salary.equals(that.salary) &&
-                this.person.equals(that.person);
+        return Objects.equals(division, that.division) &&
+                Objects.equals(salary, that.salary) &&
+                Objects.equals(person, that.person);
     }
+
+    private int hash;
+    private boolean freezeUpdateHash;
 
     @Override
     public int hashCode() {
         return hash;
     }
 
-    private int hash;
-    private boolean freezeUpdateHash;
-
     private void updateHash() {
         if (freezeUpdateHash) {
             return;
         }
-        hash = Objects.hash(this.division, this.salary.hashCode(), this.person.hashCode());
+        hash = Objects.hash(this.person.hashCode(),
+                this.salary.hashCode(),
+                this.division.hashCode());
     }
 
     public Employee(Person person,
@@ -130,7 +134,7 @@ public final class Employee {
         } else if (division == null) {
             throw new IllegalArgumentException("Параметр division не должен быть null");
         } else if (salary == null) {
-            throw new IllegalArgumentException("Параметр salary не должен быть  null");
+            throw new IllegalArgumentException("Параметр salary не должен быть null");
         }
 
         this.freezeUpdateHash = true;
@@ -139,7 +143,8 @@ public final class Employee {
 
         this.person = person;
         setDivision(division);
-        setSalary(salary);
+
+        this.salary = salary;
 
         updateHash();
         this.freezeUpdateHash = false;
