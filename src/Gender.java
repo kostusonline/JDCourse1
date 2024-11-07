@@ -5,6 +5,8 @@
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
+
 /**
  * Пол персоны.<br>
  * (Здесь должен быть enum c методами, но enum ещё не проходили.<br>
@@ -53,6 +55,25 @@ public class Gender {
             case FEMALE -> "Ж";
             default -> "-";
         };
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        Gender that = (Gender) o;
+        return gender == that.gender;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(gender);
     }
 
     /**
