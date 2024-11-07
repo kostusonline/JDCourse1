@@ -4,7 +4,7 @@
 // https://google.github.io/styleguide/javaguide.html
 
 /**
- * Проверка величины заработной платы.<br>
+ * Проверка величины заработной платы.
  *
  * @author Константин Терских, kostus.online.1974@yandex.ru, 2024
  * @version 1.1

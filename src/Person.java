@@ -3,67 +3,132 @@
 // Константин Терских, kostus.online.1974@yandex.ru, 2024
 // https://google.github.io/styleguide/javaguide.html
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
+/**
+ * Персона.<br>
+ * ФИО, пол, дата рождения. Неотъемлемые признаки персоны.
+ *
+ * @author Константин Терских, kostus.online.1974@yandex.ru, 2024
+ * @version 1.1
+ */
 public final class Person {
 
+    /**
+     * Валидатор имён {@link NameVerifier}. Внедряется только через конструктор.
+     */
+    @NotNull
     public final NameVerifier nameVerifier;
 
-    // ФИО
-
+    /**
+     * Фамилия
+     */
+    @NotNull
     private String lastName;
 
+    /**
+     * Получение фамилии
+     */
+    @NotNull
     public String getLastName() {
         return lastName;
     }
 
-    public void setLastName(String lastName) {
-        if (nameVerifier != null && !nameVerifier.isGood(lastName)) {
-            return;
+    public static final String ERROR_SET_LAST_NAME = "Написание фамилии не соответствует правилам";
+    public static final String ERROR_SET_FIRST_NAME = "Написание имени не соответствует правилам";
+    public static final String ERROR_SET_MIDDLE_NAME = "Написание отчества не соответствует правилам";
+
+    /**
+     * Установка фамилии в соответствии с правилами
+     *
+     * @param lastName фамилия
+     */
+    public void setLastName(@NotNull String lastName) {
+        if (!nameVerifier.isGood(lastName)) {
+            throw new IllegalArgumentException(ERROR_SET_LAST_NAME);
         }
-        this.lastName = lastName;
+        this.lastName = NameVerifier.normalize(lastName);
         updateHash();
     }
 
+    /**
+     * Имя
+     */
     private String firstName;
 
+    /**
+     * Получение имени
+     */
     public String getFirstName() {
         return firstName;
     }
 
+    /**
+     * Установка имени в соответствии с правилами
+     *
+     * @param firstName имя
+     */
     public void setFirstName(String firstName) {
-        if (nameVerifier != null && !nameVerifier.isGood(firstName)) {
-            return;
+        if (!nameVerifier.isGood(firstName)) {
+            throw new IllegalArgumentException(ERROR_SET_FIRST_NAME);
         }
-        this.firstName = firstName;
+        this.firstName = NameVerifier.normalize(firstName);
         updateHash();
     }
 
+    /**
+     * Отчество
+     */
     private String middleName;
 
+    /**
+     * Получение отчества
+     */
     public String getMiddleName() {
         return middleName;
     }
 
+    /**
+     * Установка отчества в соответствии с правилами
+     *
+     * @param middleName отчество
+     */
     public void setMiddleName(String middleName) {
-        if (nameVerifier != null && !nameVerifier.isGood(middleName)) {
-            return;
+        if (!nameVerifier.isGood(middleName)) {
+            throw new IllegalArgumentException(ERROR_SET_MIDDLE_NAME);
         }
-        this.middleName = middleName;
+        this.middleName = NameVerifier.normalize(middleName);
         updateHash();
     }
 
-    // Дата рождения.
-    // Предпочтение отдано простому хранению в int т.к.
-    // в Calendar или в *Date* можно преобразовать всегда (для проверки валидности, например).
-
+    /**
+     * Год рождения
+     */
     private int birthYear;
+
+    /**
+     * Месяц рождения
+     */
     private int birthMonth;
+
+    /**
+     * День рождения
+     */
     private int birthDay;
 
-    public String getBirthDate(DateTimeFormatter dtFormatter) {
+    /**
+     * Получение строки с датой рождения в нужном формате
+     *
+     * @param dtFormatter формат даты рождения
+     * @return строка с отформатированной датой рождения
+     */
+    @NotNull
+    public String getBirthDate(@NotNull DateTimeFormatter dtFormatter) {
         String result;
         LocalDate date = null;
         try {
@@ -75,6 +140,13 @@ public final class Person {
         return result;
     }
 
+    /**
+     * Установка даты рождения
+     *
+     * @param year  год рождения
+     * @param month месяц рождения
+     * @param day   день рождения
+     */
     public void setBirthDate(int year, int month, int day) {
         LocalDate date = LocalDate.of(year, month, day);
         birthYear = year;
@@ -83,20 +155,17 @@ public final class Person {
         updateHash();
     }
 
-    // Пол.
-
+    /**
+     * Пол {@link Gender}
+     */
     private Gender gender;
 
+    /**
+     * Получение пола {@link Person#gender}
+     */
     public Gender getGender() {
         return gender;
     }
-
-    public void setGender(Gender gender) {
-        this.gender = gender;
-        updateHash();
-    }
-
-    // Переопределим equals и hashCode
 
     @Override
     public boolean equals(Object o) {
@@ -110,13 +179,13 @@ public final class Person {
         Person that = (Person) o;
 
         // Сначала самые быстрые сравнения, потом строки.
-        return this.birthYear == that.birthYear &&
-                this.birthMonth == that.birthMonth &&
-                this.birthDay == that.birthDay &&
-                this.gender == that.gender &&
-                this.lastName.equals(that.lastName) &&
-                this.firstName.equals(that.firstName) &&
-                this.middleName.equals(that.middleName);
+        return Objects.equals(birthYear, that.birthYear) &&
+                Objects.equals(this.birthMonth, that.birthMonth) &&
+                Objects.equals(this.birthDay, that.birthDay) &&
+                Objects.equals(this.gender, that.gender) &&
+                Objects.equals(this.lastName, that.lastName) &&
+                Objects.equals(this.firstName, that.firstName) &&
+                Objects.equals(this.middleName, that.middleName);
     }
 
     @Override
@@ -124,9 +193,19 @@ public final class Person {
         return hash;
     }
 
+    /**
+     * Хэш
+     */
     private int hash;
+
+    /**
+     * Запрет обновления хэша
+     */
     private boolean freezeUpdateHash;
 
+    /**
+     * Обновление хэша. Вызывается сеттерами, когда нужно обновить хэш.
+     */
     private void updateHash() {
         if (freezeUpdateHash) {
             return;
@@ -141,10 +220,24 @@ public final class Person {
                 this.middleName);
     }
 
-    // Инициализация
-
-    public Person(NameVerifier nameVerifier, String lastName, String firstName, String middleName,
-                  int birthYear, int birthMonth, int birthDay, Gender gender) {
+    /**
+     * Конструктор.
+     *
+     * @param nameVerifier валидатор частей имени
+     * @param lastName     фамилия
+     * @param firstName    имя
+     * @param middleName   отчество
+     * @param birthYear    год рождения
+     * @param birthMonth   месяц рождения
+     * @param birthDay     день рождения
+     * @param gender       пол
+     */
+    public Person(@NotNull NameVerifier nameVerifier,
+                  @NotNull String lastName,
+                  @NotNull String firstName,
+                  @NotNull String middleName,
+                  int birthYear, int birthMonth, int birthDay,
+                  @NotNull Gender gender) {
         freezeUpdateHash = true;
 
         this.nameVerifier = nameVerifier;
@@ -153,12 +246,18 @@ public final class Person {
         setMiddleName(middleName);
 
         setBirthDate(birthYear, birthMonth, birthDay);
-        setGender(gender);
+        this.gender = gender;
 
         freezeUpdateHash = false;
         updateHash();
     }
 
+    /**
+     * Инструмент для разбора строки ФИО
+     *
+     * @param fullName полное имя в порядке фамилия, имя, отчество
+     * @return массив, содержащий имя, фамилию, отчество
+     */
     public static String[] parseNames(String fullName) {
         String[] nameParts = fullName.split(" ");
         if (nameParts.length != 3) {
@@ -167,6 +266,12 @@ public final class Person {
         return nameParts;
     }
 
+    /**
+     * Инструмент для разбора строки с датой
+     *
+     * @param birthDate строка даты в виде "день.месяц.год"
+     * @return массив, содержащий год, месяц и день
+     */
     public static int[] parseDate(String birthDate) {
         String[] date = birthDate.split("\\.");
         if (date.length != 3) {
@@ -180,7 +285,18 @@ public final class Person {
         return result;
     }
 
-    public Person(NameVerifier nameVerifier, String fullName, String birthDate, char genderSign) {
+    /**
+     * Конструктор для более компактного создания персоны.
+     *
+     * @param nameVerifier валидатор частей имени
+     * @param fullName ФИО в порядке "фамилия имя отчество"
+     * @param birthDate дата рождения в виде "день.месяц.год"
+     * @param genderSign признак пола в виде "М" или "Ж"
+     */
+    public Person(@NotNull NameVerifier nameVerifier,
+                  @NotNull String fullName,
+                  @NotNull String birthDate,
+                  char genderSign) {
         freezeUpdateHash = true;
 
         this.nameVerifier = nameVerifier;
@@ -194,7 +310,7 @@ public final class Person {
         assert dateParts != null;
         setBirthDate(dateParts[2], dateParts[1], dateParts[0]);
 
-        setGender(new Gender(genderSign));
+        gender = new Gender(genderSign);
 
         freezeUpdateHash = false;
         updateHash();
@@ -204,5 +320,13 @@ public final class Person {
     public String toString() {
         return String.format("%s %s %s, %s, %02d.%02d.%d",
                 lastName, firstName, middleName, gender, birthDay, birthMonth, birthYear);
+    }
+
+    /**
+     * Возвращает только ФИО.
+     */
+    public String toStringShort() {
+        return String.format("%s %s %s",
+                lastName, firstName, middleName);
     }
 }

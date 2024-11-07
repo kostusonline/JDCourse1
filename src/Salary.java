@@ -35,14 +35,14 @@ public final class Salary {
      * Класс проверки заработной платы {@link SalaryVerifier}.<br>
      * Внедряется только через конструктор.
      */
-    @Nullable
+    @NotNull
     private final SalaryVerifier salaryVerifier;
 
     /**
      * Установка величины заработной платы.
      */
     public void setValue(double newSalary) {
-        if (salaryVerifier != null && !salaryVerifier.isGood(newSalary)) {
+        if (!salaryVerifier.isGood(newSalary)) {
             throw new IllegalArgumentException("Недопустимое значение заработной платы");
         }
 
@@ -68,7 +68,7 @@ public final class Salary {
         double delta = salary * positivePercentage / 100;
         double newSalary = salary + delta;
 
-        if (salaryVerifier != null && !salaryVerifier.isGood(newSalary)) {
+        if (!salaryVerifier.isGood(newSalary)) {
             throw new IllegalArgumentException("Недопустимое значение заработной платы");
         }
 
@@ -117,7 +117,7 @@ public final class Salary {
      * @param currencyFormat формат вывода заработной платы. Может быть null.
      */
     public Salary(double salary,
-                  @Nullable SalaryVerifier salaryVerifier,
+                  @NotNull SalaryVerifier salaryVerifier,
                   @Nullable DecimalFormat currencyFormat) {
 
         this.salaryVerifier = salaryVerifier;

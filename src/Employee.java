@@ -3,6 +3,8 @@
 // Константин Терских, kostus.online.1974@yandex.ru, 2024
 // https://google.github.io/styleguide/javaguide.html
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Objects;
 
 /**
@@ -18,7 +20,7 @@ public final class Employee {
     private static int idTop = 0;
 
     /**
-     * Получение значения счётчика {@link Employee#idTop}.
+     * Получение текущего значения счётчика {@link Employee#idTop}.<br>
      */
     public static int getIdTop() {
         return idTop;
@@ -42,11 +44,13 @@ public final class Employee {
      * Сотрудник. Экземпляр класса {@link Person}.<br>
      * Внедряется только через конструктор.
      */
+    @NotNull
     private final Person person;
 
     /**
      * Получение ссылки на экземпляр сотрудника {@link Employee#person}.
      */
+    @NotNull
     public Person getPerson() {
         return person;
     }
@@ -55,11 +59,13 @@ public final class Employee {
      * Отдел, к которому прикреплён сотрудник.<br>
      * Внедряется через конструктор, но может быть заменён в дальнейшем.
      */
+    @NotNull
     private Division division;
 
     /**
      * Получение отдела сотрудника {@link Employee#division}.
      */
+    @NotNull
     public Division getDivision() {
         return division;
     }
@@ -70,7 +76,7 @@ public final class Employee {
      * внешний экземпляр класса {@link Division}.<br>
      * Поэтому здесь есть возможность установить любой другой отдел.
      */
-    public void setDivision(Division division) {
+    public void setDivision(@NotNull Division division) {
         this.division = division;
     }
 
@@ -80,17 +86,17 @@ public final class Employee {
      * Изменение зарплаты сотрудника производится через методы<br>
      * {@link Salary#setValue(double)} и {@link Salary#performIndexing(double)}.
      */
+    @NotNull
     private final Salary salary;
 
     /**
      * Получение зарплаты сотрудника {@link Employee#salary}.<br>
      * См. {@link Employee#salary}.
      */
+    @NotNull
     public Salary getSalary() {
         return salary;
     }
-
-    // Переопределим equals и hashCode
 
     @Override
     public boolean equals(Object o) {
@@ -109,7 +115,15 @@ public final class Employee {
                 Objects.equals(person, that.person);
     }
 
+    /**
+     * Хэш
+     */
     private int hash;
+
+    /**
+     * Флаг, запрещающий обновление хэша.
+     * Используется при создании экземпляра класса.
+     */
     private boolean freezeUpdateHash;
 
     @Override
@@ -117,26 +131,33 @@ public final class Employee {
         return hash;
     }
 
+    /**
+     * Обновление хэша.
+     * Используется при изменении полей класса.
+     */
     private void updateHash() {
         if (freezeUpdateHash) {
             return;
         }
+
+        // TODO Надо ли здесь брать основу для хэша из
+        //  this.object.hashCode() или лучше
+        //  this.object вместо этого?
         hash = Objects.hash(this.person.hashCode(),
                 this.salary.hashCode(),
                 this.division.hashCode());
     }
 
-    public Employee(Person person,
-                    Division division,
-                    Salary salary) {
-        if (person == null) {
-            throw new IllegalArgumentException("Параметр person не должен быть null");
-        } else if (division == null) {
-            throw new IllegalArgumentException("Параметр division не должен быть null");
-        } else if (salary == null) {
-            throw new IllegalArgumentException("Параметр salary не должен быть null");
-        }
-
+    /**
+     * Основной конструктор.
+     *
+     * @param person   персона {@link Person}
+     * @param division отдел {@link Division}
+     * @param salary   заработная плата {@link Salary}
+     */
+    public Employee(@NotNull Person person,
+                    @NotNull Division division,
+                    @NotNull Salary salary) {
         this.freezeUpdateHash = true;
 
         id = idTop++;
@@ -150,27 +171,18 @@ public final class Employee {
         this.freezeUpdateHash = false;
     }
 
-    public Employee(Person person,
-                    String divisionSign,
-                    SalaryVerifier salaryVerifier, double salaryValue) {
-        if (person == null) {
-            throw new IllegalArgumentException("person == null");
-        } else if (divisionSign == null) {
-            throw new IllegalArgumentException("divisionSign == null");
-        } else if (salaryVerifier == null) {
-            throw new IllegalArgumentException("salaryVerifier == null");
-        }
-
-        this.freezeUpdateHash = true;
-
-        id = idTop++;
-
-        this.person = person;
-        setDivision(new Division(divisionSign));
-        salary = new Salary(salaryVerifier, salaryValue, null);
-
-        updateHash();
-        this.freezeUpdateHash = false;
+    /**
+     * Конструктор с упрощённым вводом данных.
+     *
+     * @param person       персона {@link Person}
+     * @param divisionSign название отдела {@link Division#getName()}
+     */
+    public Employee(@NotNull Person person,
+                    @NotNull String divisionSign,
+                    @NotNull SalaryVerifier salaryVerifier, double salaryValue) {
+        this(person,
+                new Division(divisionSign),
+                new Salary(salaryValue, salaryVerifier, null));
     }
 
     @Override
@@ -178,6 +190,9 @@ public final class Employee {
         return String.format("ID: %d, %s, отдел %s, %s", id, person, division, salary);
     }
 
+    /**
+     * Возвращает только ФИО сотрудника.
+     */
     public String toShortString() {
         return String.format("%s %s %s", person.getLastName(), person.getFirstName(), person.getMiddleName());
     }
