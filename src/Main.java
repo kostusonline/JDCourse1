@@ -11,14 +11,14 @@ public class Main {
     private static PrintWriter out;
     private static DecimalFormat currencyFormat;
 
+    private static final SalaryVerifier salaryVerifier = new SalaryVerifier();
+    private static final NameVerifier nameVerifier = new NameVerifier();
+
     private static void init() {
         final var charset = System.out.charset();
         System.out.printf("[charset: %s]%n", charset);
         out = new PrintWriter(System.out, true, charset);
     }
-
-    private static final SalaryVerifier salaryVerifier = new SalaryVerifier();
-    private static final NameVerifier nameVerifier = new NameVerifier();
 
     private static void testDivision() {
         out.println("testDivision()");
@@ -77,6 +77,32 @@ public class Main {
 
     private static void testSalary() {
         out.println("testSalary()");
+
+        var salary1 = new Salary(150_000, salaryVerifier, currencyFormat);
+        var salary1a = new Salary(150_000, salaryVerifier, currencyFormat);
+        var salary2 = new Salary(250_000, salaryVerifier, currencyFormat);
+        var salary3 = new Salary(350_000, salaryVerifier, currencyFormat);
+
+        if (Objects.equals(salary1, salary1a)) {
+            out.println("salary1 equals salary1a");
+        } else {
+            out.println("salary1 not equals salary1a");
+        }
+        if (Objects.equals(salary1, salary2)) {
+            out.println("salary1 equals salary2");
+        } else {
+            out.println("salary1 not equals salary2");
+        }
+
+        out.println("salary1 = " + salary1a.getValue());
+        out.println("salary2 = " + salary2);
+
+        salary3.setValue(360_000);
+        out.println("salary3 now = " + salary3);
+
+        salary2.performIndexing(30);
+        out.println("salary2 now = " + salary2);
+
         out.println();
     }
 
