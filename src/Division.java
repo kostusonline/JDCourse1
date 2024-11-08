@@ -35,7 +35,7 @@ public class Division {
     /**
      * Конструктор
      *
-     * @param name название отдела.
+     * @param name название отдела.<br>
      *             Устанавливает название отдела {@link Division#name}.
      */
     public Division(@NotNull String name) {
