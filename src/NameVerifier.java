@@ -4,6 +4,9 @@
 // https://google.github.io/styleguide/javaguide.html
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Arrays;
 
 /**
  * Валидатор имени.
@@ -45,8 +48,12 @@ public class NameVerifier {
      * @param minLength    минимальная длина имени
      * @param maxLength    максимальная длина имени
      */
-    public NameVerifier(@NotNull String allowedChars, int minLength, int maxLength) {
-        this.allowedChars = allowedChars;
+    public NameVerifier(@Nullable String allowedChars, int minLength, int maxLength) {
+        if (allowedChars == null) {
+            this.allowedChars = ALLOWED_CHARS_DEFAULT;
+        } else {
+            this.allowedChars = allowedChars.trim().toLowerCase();
+        }
         this.minLength = minLength;
         this.maxLength = maxLength;
     }
@@ -57,7 +64,7 @@ public class NameVerifier {
      * @param str строка для проверки
      * @return результат проверки
      */
-    public boolean isGood(String str) {
+    public boolean isGood(@Nullable String str) {
         if (str == null) {
             return false;
         }
@@ -86,6 +93,42 @@ public class NameVerifier {
         return true;
     }
 
+    public static final char SPACE = ' ';
+
+    /**
+     * Удаление из строки всех подряд идущих пробелов.
+     *
+     * @param source исходная строка
+     * @return нормализованная строка
+     */
+    @Nullable
+    public static String removeContiguousSpaces(@Nullable String source) {
+        if (source == null) {
+            return null;
+        }
+
+        source = source.trim();
+        int count = source.length();
+        if (count <= 1) {
+            return source;
+        }
+
+        var sb = new StringBuilder();
+        char lastAppended = 0;
+        for (int i = 0; i < count; i++) {
+            char currentChar = source.charAt(i);
+
+            if (currentChar != SPACE) {
+                sb.append(currentChar);
+            } else if (lastAppended != SPACE) {
+                sb.append(currentChar);
+            }
+            lastAppended = currentChar;
+        }
+
+        return sb.toString();
+    }
+
     /**
      * Нормализация строки. Пока только капитализация с затрагиванием всех символов строки.<br>
      *
@@ -95,7 +138,8 @@ public class NameVerifier {
      * для пустой строки возвращает ту же строку,<br>
      * для строки с одним символом возвращает строку с нормализованным символом (и -> И)
      */
-    public static String normalize(String str) {
+    @Nullable
+    public static String normalize(@Nullable String str) {
         if (str == null) {
             return null;
         }

@@ -300,6 +300,12 @@ public final class Person {
         freezeUpdateHash = true;
 
         this.nameVerifier = nameVerifier;
+
+        fullName = NameVerifier.removeContiguousSpaces(fullName);
+        if (fullName == null){
+            throw new IllegalArgumentException("Некорректная строка полного имени");
+        }
+
         var names = parseNames(fullName);
         assert names != null;
         setLastName(names[0]);

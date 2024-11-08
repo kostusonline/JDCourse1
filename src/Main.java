@@ -13,6 +13,8 @@ public class Main {
 
     private static final SalaryVerifier salaryVerifier = new SalaryVerifier();
     private static final NameVerifier nameVerifier = new NameVerifier();
+    private static final Gender male = new Gender('m');
+    private static final Gender female = new Gender('f');
 
     private static void init() {
         final var charset = System.out.charset();
@@ -108,11 +110,34 @@ public class Main {
 
     private static void testPerson() {
         out.println("testPerson()");
+
+        var person1 = new Person(nameVerifier, "ивАнов", "Иван", "иванович",
+                1964, 2, 13, male);
+        var person2 = new Person(nameVerifier, "Сидоров Семён    семёнович", "19.05.1946", 'м');
+        var person2a = new Person(nameVerifier, "Сидоров Семён Семёнович", "19.05.1946", 'm');
+        var person3 = new Person(nameVerifier, "Сидоров Сергей    Собяньевич", "29.04.1967", 'м');
+
+        if (Objects.equals(person2, person2a)) {
+            out.println("person2 equals person2a");
+        } else {
+            out.println("person2 not equals person2a");
+        }
+
+        if (Objects.equals(person1, person2)) {
+            out.println("person1 equals person2");
+        } else {
+            out.println("person1 not equals person2");
+        }
+
+        person3.setBirthDate(1947, 5, 9);
+        out.println("person3 = " + person3);
+
+        out.println("person2 = " + person2.toStringShort());
         out.println();
     }
 
     private static void testEmployee() {
-        out.println("testPerson()");
+        out.println("testEmployee()");
 
         Employee[] employees = new Employee[EMPLOYEE_COUNT_DEFAULT];
 
