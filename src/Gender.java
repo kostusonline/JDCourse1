@@ -49,6 +49,7 @@ public class Gender {
      *
      * @return признак пола персоны.
      */
+    @SuppressWarnings("unused")
     public char getGender() {
         return gender;
     }
@@ -87,6 +88,7 @@ public class Gender {
      * @return строковое представление пола.
      */
     @NotNull
+    @SuppressWarnings("unused")
     public String toStringLong() {
         return switch (gender) {
             case MALE -> "Мужской";

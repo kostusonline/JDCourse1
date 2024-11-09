@@ -29,12 +29,12 @@ public class SalaryVerifier {
     private final double maxSalary;
 
     /**
-     * Конструктор.<br>
+     * Конструктор по умолчанию.<br>
      * Границы заработной платы устанавливаются из значений по умолчанию.
      */
     public SalaryVerifier() {
-        this.minSalary = SALARY_MIN_DEFAULT;
-        this.maxSalary = SALARY_MAX_DEFAULT;
+        minSalary = SALARY_MIN_DEFAULT;
+        maxSalary = SALARY_MAX_DEFAULT;
     }
 
     /**
@@ -43,6 +43,7 @@ public class SalaryVerifier {
      * @param minSalary нижняя граница заработной платы
      * @param maxSalary верхняя граница заработной платы
      */
+    @SuppressWarnings("unused")
     public SalaryVerifier(double minSalary, double maxSalary) {
         if (minSalary >= maxSalary) {
             throw new IllegalArgumentException("Минимальная заработная плата должна быть меньше максимальной");

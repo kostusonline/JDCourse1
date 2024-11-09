@@ -26,6 +26,7 @@ public class EmployeeBook {
      * Конструктор по умолчанию.<br>
      * Создан только для удовлетворения анализатора.
      */
+    @SuppressWarnings("unused")
     public EmployeeBook() {
         assert false;
         this.employees = new Employee[0];

@@ -51,6 +51,7 @@ public final class Division {
      * Конструктор по умолчанию.<br>
      * Создан только для удовлетворения анализатора.
      */
+    @SuppressWarnings("unused")
     public Division() {
         assert false;
         this.name = DIVISION_UNKNOWN;

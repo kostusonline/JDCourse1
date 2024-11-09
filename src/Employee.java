@@ -24,6 +24,7 @@ public final class Employee {
      *
      * @return текущее значение счётчика {@link Employee#idTop}.
      */
+    @SuppressWarnings("unused")
     public static int getIdTop() {
         return idTop;
     }
@@ -57,6 +58,7 @@ public final class Employee {
      * @return ссылка на экземпляр сотрудника {@link Employee#person}.
      */
     @NotNull
+    @SuppressWarnings("unused")
     public Person getPerson() {
         return person;
     }
@@ -164,12 +166,13 @@ public final class Employee {
      * Конструктор по умолчанию.<br>
      * Создан только для удовлетворения анализатора.
      */
+    @SuppressWarnings("unused")
     public Employee() {
         assert false;
         this.freezeUpdateHash = true;
         id = idTop++;
         this.person = new Person();
-        setDivision(new Division());
+        this.division = new Division();
         this.salary = new Salary();
         updateHash();
         this.freezeUpdateHash = false;
@@ -190,7 +193,7 @@ public final class Employee {
         id = idTop++;
 
         this.person = person;
-        setDivision(division);
+        this.division = division;
 
         this.salary = salary;
 

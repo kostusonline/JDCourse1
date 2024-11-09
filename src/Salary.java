@@ -42,6 +42,7 @@ public final class Salary {
 
     /**
      * Установка величины заработной платы.
+     *
      * @param newSalary значение заработной платы
      */
     public void setValue(double newSalary) {

@@ -6,8 +6,6 @@
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
-
 /**
  * Валидатор имени.
  *
@@ -15,15 +13,21 @@ import java.util.Arrays;
  * @version 1.1
  */
 public class NameVerifier {
-    /** Русский и английский алфавиты, разрешённые символы. */
+    /**
+     * Русский и английский алфавиты, разрешённые символы.
+     */
     public static final String ALLOWED_CHARS_DEFAULT =
             "- абвгдеёжзийклмнопрстуфхцчшщъыьэюя" +
                     "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ" +
                     "abcdefghijklmnopqrstuvwxyz" +
                     "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    /** Минимальная длина имени по умолчанию. */
+    /**
+     * Минимальная длина имени по умолчанию.
+     */
     public static final int CHARS_MIN_DEFAULT = 1;
-    /** Максимальная длина имени по умолчанию. */
+    /**
+     * Максимальная длина имени по умолчанию.
+     */
     public static final int CHARS_MAX_DEFAULT = 250;
 
     /**
@@ -32,9 +36,13 @@ public class NameVerifier {
     @NotNull
     private final String allowedChars;
 
-    /** Минимальная длина имени. */
+    /**
+     * Минимальная длина имени.
+     */
     private final int minLength;
-    /** Максимальная длина имени. */
+    /**
+     * Максимальная длина имени.
+     */
     private final int maxLength;
 
     /**
@@ -53,6 +61,7 @@ public class NameVerifier {
      * @param minLength    минимальная длина имени
      * @param maxLength    максимальная длина имени
      */
+    @SuppressWarnings("unused")
     public NameVerifier(@Nullable String allowedChars, int minLength, int maxLength) {
         if (allowedChars == null) {
             this.allowedChars = ALLOWED_CHARS_DEFAULT;
@@ -98,7 +107,9 @@ public class NameVerifier {
         return true;
     }
 
-    /** Символ пробела. */
+    /**
+     * Символ пробела.
+     */
     public static final char SPACE = ' ';
 
     /**

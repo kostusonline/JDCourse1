@@ -4,7 +4,6 @@
 // https://google.github.io/styleguide/javaguide.html
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -117,7 +116,7 @@ public final class Person {
      *
      * @param middleName отчество
      */
-    private void setMiddleName(String middleName) {
+    private void setMiddleName(@NotNull String middleName) {
         if (!nameVerifier.isGood(middleName)) {
             throw new IllegalArgumentException(ERROR_SET_MIDDLE_NAME);
         }
@@ -149,7 +148,7 @@ public final class Person {
     @NotNull
     public String getBirthDate(@NotNull DateTimeFormatter dtFormatter) {
         String result;
-        LocalDate date = null;
+        LocalDate date;
         try {
             date = LocalDate.of(birthYear, birthMonth, birthDay);
             result = date.format(dtFormatter);
@@ -168,9 +167,9 @@ public final class Person {
      */
     public void setBirthDate(int year, int month, int day) {
         LocalDate date = LocalDate.of(year, month, day);
-        birthYear = year;
-        birthMonth = month;
-        birthDay = day;
+        birthYear = date.getYear();
+        birthMonth = date.getMonthValue();
+        birthDay = date.getDayOfMonth();
         updateHash();
     }
 
@@ -178,7 +177,7 @@ public final class Person {
      * Пол {@link Gender}
      */
     @NotNull
-    private Gender gender;
+    private final Gender gender;
 
     /**
      * Получение пола. {@link Person#gender}
@@ -186,6 +185,7 @@ public final class Person {
      * @return пол
      */
     @NotNull
+    @SuppressWarnings("unused")
     public Gender getGender() {
         return gender;
     }
@@ -247,9 +247,15 @@ public final class Person {
      * Конструктор по умолчанию.
      */
     public Person() {
-        this(new NameVerifier(), "", "", "",
-                0, 0, 0,
-                new Gender(Gender.MALE));
+        freezeUpdateHash = true;
+        this.nameVerifier = new NameVerifier();
+        this.lastName = "";
+        this.firstName = "";
+        this.middleName = "";
+        setBirthDate(0, 0, 0);
+        this.gender = new Gender(Gender.NOT_SPECIFIED);
+        freezeUpdateHash = false;
+        updateHash();
     }
 
     /**
@@ -271,6 +277,11 @@ public final class Person {
                   int birthYear, int birthMonth, int birthDay,
                   @NotNull Gender gender) {
         freezeUpdateHash = true;
+
+        // Дурацкое решение для того, чтобы убрать предупреждения "not-null must be.."
+        this.lastName = "";
+        this.firstName = "";
+        this.middleName = "";
 
         this.nameVerifier = nameVerifier;
         setLastName(lastName);
@@ -331,6 +342,11 @@ public final class Person {
                   char genderSign) {
         freezeUpdateHash = true;
 
+        // Дурацкое решение для того, чтобы убрать предупреждения "not-null must be.."
+        this.lastName = "";
+        this.firstName = "";
+        this.middleName = "";
+
         this.nameVerifier = nameVerifier;
 
         fullName = NameVerifier.removeContiguousSpaces(fullName);
@@ -356,8 +372,9 @@ public final class Person {
 
     @Override
     public String toString() {
-        return String.format("%s %s %s, %s, %02d.%02d.%d",
-                lastName, firstName, middleName, gender, birthDay, birthMonth, birthYear);
+        return String.format("%s %s %s, %s, %s",
+                lastName, firstName, middleName, gender,
+                getBirthDate(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
     }
 
     /**
