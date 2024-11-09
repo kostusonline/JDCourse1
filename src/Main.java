@@ -7,7 +7,19 @@ import java.io.PrintWriter;
 import java.text.DecimalFormat;
 import java.util.Objects;
 
+/**
+ * Основной класс приложения.
+ *
+ * @author Константин Терских, kostus.online.1974@yandex.ru, 2024
+ * @version 1.1
+ */
 public class Main {
+    /**
+     * Конструктор.
+     */
+    public Main() {
+    }
+
     private static PrintWriter out;
     private static DecimalFormat currencyFormat;
 
@@ -177,6 +189,9 @@ public class Main {
         out.println();
     }
 
+    /**
+     * Вместимость хранилища записей сотрудников.
+     */
     public static final int EMPLOYEE_COUNT_DEFAULT = 10;
 
 //    private record SalariesAndExpenses(BigDecimal salariesSum, BigDecimal salariesAverage,
@@ -238,6 +253,11 @@ public class Main {
 //        return new SalariesAndExpenses(salariesSum, salariesAverage, employeeWithMinSalary, employeeWithMaxSalary);
 //    }
 
+    /**
+     * Точка входа.
+     *
+     * @param args аргументы командной строки
+     */
     public static void main(String[] args) {
         init();
 

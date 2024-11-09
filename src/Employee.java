@@ -21,6 +21,8 @@ public final class Employee {
 
     /**
      * Получение текущего значения счётчика {@link Employee#idTop}.<br>
+     *
+     * @return текущее значение счётчика {@link Employee#idTop}.
      */
     public static int getIdTop() {
         return idTop;
@@ -35,6 +37,8 @@ public final class Employee {
     /**
      * Получение id сотрудника {@link Employee#id}.<br>
      * Устанавливается неявно в конструкторе.
+     *
+     * @return id сотрудника {@link Employee#id}.
      */
     public int getId() {
         return id;
@@ -49,6 +53,8 @@ public final class Employee {
 
     /**
      * Получение ссылки на экземпляр сотрудника {@link Employee#person}.
+     *
+     * @return ссылка на экземпляр сотрудника {@link Employee#person}.
      */
     @NotNull
     public Person getPerson() {
@@ -64,6 +70,8 @@ public final class Employee {
 
     /**
      * Получение отдела сотрудника {@link Employee#division}.
+     *
+     * @return отдел сотрудника {@link Employee#division}.
      */
     @NotNull
     public Division getDivision() {
@@ -75,6 +83,8 @@ public final class Employee {
      * Отделы создаются отдельно и через конструктор внедряется уже готовый<br>
      * внешний экземпляр класса {@link Division}.<br>
      * Поэтому здесь есть возможность установить любой другой отдел.
+     *
+     * @param division отдел сотрудника {@link Employee#division}.
      */
     public void setDivision(@NotNull Division division) {
         this.division = division;
@@ -92,6 +102,8 @@ public final class Employee {
     /**
      * Получение зарплаты сотрудника {@link Employee#salary}.<br>
      * См. {@link Employee#salary}.
+     *
+     * @return зарплата сотрудника {@link Employee#salary}.
      */
     @NotNull
     public Salary getSalary() {
@@ -174,8 +186,10 @@ public final class Employee {
     /**
      * Конструктор с упрощённым вводом данных.
      *
-     * @param person       персона {@link Person}
-     * @param divisionSign название отдела {@link Division#getName()}
+     * @param person         персона {@link Person}
+     * @param divisionSign   название отдела {@link Division#getName()}
+     * @param salaryVerifier валидатор зарплаты {@link SalaryVerifier}
+     * @param salaryValue    заработная плата {@link Salary#getValue()}
      */
     public Employee(@NotNull Person person,
                     @NotNull String divisionSign,
@@ -192,6 +206,8 @@ public final class Employee {
 
     /**
      * Возвращает только ФИО сотрудника.
+     *
+     * @return ФИО сотрудника
      */
     public String toShortString() {
         return String.format("%s %s %s", person.getLastName(), person.getFirstName(), person.getMiddleName());

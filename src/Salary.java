@@ -26,6 +26,8 @@ public final class Salary {
 
     /**
      * Получение значения заработной платы.
+     *
+     * @return значение заработной платы.
      */
     public double getValue() {
         return salary;
@@ -40,6 +42,7 @@ public final class Salary {
 
     /**
      * Установка величины заработной платы.
+     * @param newSalary значение заработной платы
      */
     public void setValue(double newSalary) {
         if (!salaryVerifier.isGood(newSalary)) {

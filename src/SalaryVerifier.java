@@ -10,7 +10,13 @@
  * @version 1.1
  */
 public class SalaryVerifier {
+    /**
+     * Нижняя граница заработной платы.
+     */
     public static final double SALARY_MIN_DEFAULT = 10_000; // условный МРОТ
+    /**
+     * Верхняя граница заработной платы.
+     */
     public static final double SALARY_MAX_DEFAULT = 1_500_000; // да куда уже больше
 
     /**

@@ -15,12 +15,15 @@ import java.util.Arrays;
  * @version 1.1
  */
 public class NameVerifier {
+    /** Русский и английский алфавиты, разрешённые символы. */
     public static final String ALLOWED_CHARS_DEFAULT =
             "- абвгдеёжзийклмнопрстуфхцчшщъыьэюя" +
                     "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ" +
                     "abcdefghijklmnopqrstuvwxyz" +
                     "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    /** Минимальная длина имени по умолчанию. */
     public static final int CHARS_MIN_DEFAULT = 1;
+    /** Максимальная длина имени по умолчанию. */
     public static final int CHARS_MAX_DEFAULT = 250;
 
     /**
@@ -29,7 +32,9 @@ public class NameVerifier {
     @NotNull
     private final String allowedChars;
 
+    /** Минимальная длина имени. */
     private final int minLength;
+    /** Максимальная длина имени. */
     private final int maxLength;
 
     /**
@@ -93,6 +98,7 @@ public class NameVerifier {
         return true;
     }
 
+    /** Символ пробела. */
     public static final char SPACE = ' ';
 
     /**

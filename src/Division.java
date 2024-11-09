@@ -17,13 +17,28 @@ import java.util.Objects;
  */
 public class Division {
     /**
-     * Константы для названий отделов.
+     * Отдел не определён
      */
     public static final String DIVISION_UNKNOWN = "-";
+    /**
+     * Отдел 1
+     */
     public static final String DIVISION_1 = "1";
+    /**
+     * Отдел 2
+     */
     public static final String DIVISION_2 = "2";
+    /**
+     * Отдел 3
+     */
     public static final String DIVISION_3 = "3";
+    /**
+     * Отдел 4
+     */
     public static final String DIVISION_4 = "4";
+    /**
+     * Отдел 5
+     */
     public static final String DIVISION_5 = "5";
 
     /**
@@ -33,10 +48,10 @@ public class Division {
     private final String name;
 
     /**
-     * Конструктор
+     * Конструктор.<br>
+     * Устанавливает название отдела {@link Division#name}.
      *
      * @param name название отдела.<br>
-     *             Устанавливает название отдела {@link Division#name}.
      */
     public Division(@NotNull String name) {
         this.name = switch (name) {
@@ -51,6 +66,8 @@ public class Division {
 
     /**
      * Получение названия отдела {@link Division#name}.
+     *
+     * @return название отдела.
      */
     @NotNull
     public String getName() {

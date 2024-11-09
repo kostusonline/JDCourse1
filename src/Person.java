@@ -33,14 +33,25 @@ public final class Person {
 
     /**
      * Получение фамилии
+     *
+     * @return фамилия
      */
     @NotNull
     public String getLastName() {
         return lastName;
     }
 
+    /**
+     * Ошибка при установке фамилии
+     */
     public static final String ERROR_SET_LAST_NAME = "Написание фамилии не соответствует правилам";
+    /**
+     * Ошибка при установке имени
+     */
     public static final String ERROR_SET_FIRST_NAME = "Написание имени не соответствует правилам";
+    /**
+     * Ошибка при установке отчества
+     */
     public static final String ERROR_SET_MIDDLE_NAME = "Написание отчества не соответствует правилам";
 
     /**
@@ -48,22 +59,26 @@ public final class Person {
      *
      * @param lastName фамилия
      */
-    public void setLastName(@NotNull String lastName) {
+    private void setLastName(@NotNull String lastName) {
         if (!nameVerifier.isGood(lastName)) {
             throw new IllegalArgumentException(ERROR_SET_LAST_NAME);
         }
-        this.lastName = NameVerifier.normalize(lastName);
+        this.lastName = Objects.requireNonNull(NameVerifier.normalize(lastName));
         updateHash();
     }
 
     /**
      * Имя
      */
+    @NotNull
     private String firstName;
 
     /**
-     * Получение имени
+     * Получение имени.
+     *
+     * @return имя
      */
+    @NotNull
     public String getFirstName() {
         return firstName;
     }
@@ -73,22 +88,26 @@ public final class Person {
      *
      * @param firstName имя
      */
-    public void setFirstName(String firstName) {
+    private void setFirstName(@NotNull String firstName) {
         if (!nameVerifier.isGood(firstName)) {
             throw new IllegalArgumentException(ERROR_SET_FIRST_NAME);
         }
-        this.firstName = NameVerifier.normalize(firstName);
+        this.firstName = Objects.requireNonNull(NameVerifier.normalize(firstName));
         updateHash();
     }
 
     /**
      * Отчество
      */
+    @NotNull
     private String middleName;
 
     /**
-     * Получение отчества
+     * Получение отчества.
+     *
+     * @return отчество
      */
+    @NotNull
     public String getMiddleName() {
         return middleName;
     }
@@ -98,11 +117,11 @@ public final class Person {
      *
      * @param middleName отчество
      */
-    public void setMiddleName(String middleName) {
+    private void setMiddleName(String middleName) {
         if (!nameVerifier.isGood(middleName)) {
             throw new IllegalArgumentException(ERROR_SET_MIDDLE_NAME);
         }
-        this.middleName = NameVerifier.normalize(middleName);
+        this.middleName = Objects.requireNonNull(NameVerifier.normalize(middleName));
         updateHash();
     }
 
@@ -122,7 +141,7 @@ public final class Person {
     private int birthDay;
 
     /**
-     * Получение строки с датой рождения в нужном формате
+     * Получение строки с датой рождения в нужном формате.
      *
      * @param dtFormatter формат даты рождения
      * @return строка с отформатированной датой рождения
@@ -158,11 +177,15 @@ public final class Person {
     /**
      * Пол {@link Gender}
      */
+    @NotNull
     private Gender gender;
 
     /**
-     * Получение пола {@link Person#gender}
+     * Получение пола. {@link Person#gender}
+     *
+     * @return пол
      */
+    @NotNull
     public Gender getGender() {
         return gender;
     }
@@ -289,9 +312,9 @@ public final class Person {
      * Конструктор для более компактного создания персоны.
      *
      * @param nameVerifier валидатор частей имени
-     * @param fullName ФИО в порядке "фамилия имя отчество"
-     * @param birthDate дата рождения в виде "день.месяц.год"
-     * @param genderSign признак пола в виде "М" или "Ж"
+     * @param fullName     ФИО в порядке "фамилия имя отчество"
+     * @param birthDate    дата рождения в виде "день.месяц.год"
+     * @param genderSign   признак пола в виде "М" или "Ж"
      */
     public Person(@NotNull NameVerifier nameVerifier,
                   @NotNull String fullName,
@@ -302,7 +325,7 @@ public final class Person {
         this.nameVerifier = nameVerifier;
 
         fullName = NameVerifier.removeContiguousSpaces(fullName);
-        if (fullName == null){
+        if (fullName == null) {
             throw new IllegalArgumentException("Некорректная строка полного имени");
         }
 
@@ -330,6 +353,8 @@ public final class Person {
 
     /**
      * Возвращает только ФИО.
+     *
+     * @return ФИО
      */
     public String toStringShort() {
         return String.format("%s %s %s",

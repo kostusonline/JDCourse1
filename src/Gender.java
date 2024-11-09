@@ -16,8 +16,11 @@ import java.util.Objects;
  * @version 1.1
  */
 public class Gender {
+    /** Мужской пол. */
     public static final char MALE = 'M';
+    /** Женский пол. */
     public static final char FEMALE = 'F';
+    /** Не указан. */
     public static final char NOT_SPECIFIED = '-';
 
     /**
@@ -43,6 +46,8 @@ public class Gender {
 
     /**
      * Получить константу признака пола {@link Gender#gender}.
+     *
+     * @return признак пола персоны.
      */
     public char getGender() {
         return gender;
@@ -78,6 +83,8 @@ public class Gender {
 
     /**
      * Получить развёрнутое строковое представление пола {@link Gender#gender}.
+     *
+     * @return строковое представление пола.
      */
     @NotNull
     public String toStringLong() {

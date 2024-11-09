@@ -196,6 +196,12 @@ public class EmployeeBook {
         return sum / employeesCount;
     }
 
+    /**
+     * Получение сотрудника с наименьшей зарплатой
+     *
+     * @param division отдел {@link Division} или {@code null}
+     * @return сотрудник с наименьшей зарплатой или {@code null}
+     */
     @Nullable
     public Employee getEmployeePoorest(@Nullable Division division) {
         int index = getFirstFreeIndex(division);
@@ -220,6 +226,12 @@ public class EmployeeBook {
         return poorest;
     }
 
+    /**
+     * Получение сотрудника с наибольшей зарплатой
+     *
+     * @param division отдел {@link Division} или {@code null}
+     * @return сотрудник с наибольшей зарплатой или {@code null}
+     */
     @Nullable
     public Employee getEmployeeRichest(@Nullable Division division) {
         int index = getFirstFreeIndex(division);
@@ -244,6 +256,12 @@ public class EmployeeBook {
         return richest;
     }
 
+    /**
+     * Индексация зарплат сотрудников.
+     *
+     * @param division           отдел {@link Division}
+     * @param positivePercentage положительное число, %
+     */
     public void performSalaryIndexing(@Nullable Division division, double positivePercentage) {
         if (positivePercentage < 0) {
             throw new IllegalArgumentException("Параметр positivePercentage должен быть положительным числом");
@@ -262,11 +280,88 @@ public class EmployeeBook {
         }
     }
 
-    public static final int LESS_THAN = -1;
+    /**
+     * Меньше
+     */
+    public static final int LESS = -2;
+    /**
+     * Меньше или равно
+     */
+    public static final int LESS_EQ = -1;
+    /**
+     * Равно
+     */
     public static final int EQUAL = 0;
-    public static final int GREATER_THAN = 1;
+    /**
+     * Больше или равно
+     */
+    public static final int GREATER_EQ = 1;
+    /**
+     * Больше
+     */
+    public static final int GREATER = 2;
 
-    public Employee[] getEmployees(double salary, int compare, boolean inclusive) {
-        return null;
+    /**
+     * Получение сотрудников с выборкой по зарплате.
+     *
+     * @param salary   граница зарплаты
+     * @param compare  вид сравнения с границей зарплаты
+     * @param division отдел {@link Division} или {@code null}
+     * @return выбранные сотрудники
+     */
+    @Nullable
+    public Employee[] getEmployees(double salary, int compare, int maxCount, @Nullable Division division) {
+        if (salary <= 0) {
+            //throw new IllegalArgumentException("Параметр salary должен быть положительным числом");
+            return null;
+        }
+        if (maxCount <= 0) {
+            //throw new IllegalArgumentException("Параметр maxCount должен быть положительным числом");
+            return null;
+        }
+
+        Employee[] result = new Employee[maxCount];
+        int index = 0;
+        for (Employee employee : employees) {
+            if (employee == null) {
+                continue;
+            }
+
+            if (division != null && !matchDivision(employee, division)) {
+                continue;
+            }
+
+            switch (compare) {
+                case LESS -> {
+                    if (employee.getSalary().getValue() < salary) {
+                        result[index++] = employee;
+                    }
+                }
+                case LESS_EQ -> {
+                    if (employee.getSalary().getValue() <= salary) {
+                        result[index++] = employee;
+                    }
+                }
+                case EQUAL -> {
+                    if (employee.getSalary().getValue() == salary) {
+                        result[index++] = employee;
+                    }
+                }
+                case GREATER_EQ -> {
+                    if (employee.getSalary().getValue() >= salary) {
+                        result[index++] = employee;
+                    }
+                }
+                case GREATER -> {
+                    if (employee.getSalary().getValue() > salary) {
+                        result[index++] = employee;
+                    }
+                }
+                default -> {
+                    //throw new IllegalArgumentException("Неизвестный вид сравнения");
+                }
+            }
+        }
+        return result;
     }
 }
