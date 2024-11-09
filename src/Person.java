@@ -244,6 +244,15 @@ public final class Person {
     }
 
     /**
+     * Конструктор по умолчанию.
+     */
+    public Person() {
+        this(new NameVerifier(), "", "", "",
+                0, 0, 0,
+                new Gender(Gender.MALE));
+    }
+
+    /**
      * Конструктор.
      *
      * @param nameVerifier валидатор частей имени

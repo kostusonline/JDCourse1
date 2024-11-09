@@ -23,6 +23,15 @@ public class EmployeeBook {
     private final Employee[] employees;
 
     /**
+     * Конструктор по умолчанию.<br>
+     * Создан только для удовлетворения анализатора.
+     */
+    public EmployeeBook() {
+        assert false;
+        this.employees = new Employee[0];
+    }
+
+    /**
      * Конструктор с внедрением уже готового хранилища.
      *
      * @param employees массив записей о сотрудниках
@@ -126,6 +135,13 @@ public class EmployeeBook {
         }
     }
 
+    /**
+     * Проверка сотрудника на принадлежность к отделу.
+     *
+     * @param employee сотрудник {@link Employee}
+     * @param division отдел {@link Division}
+     * @return {@code true} если сотрудник принадлежит отделу
+     */
     private boolean matchDivision(@NotNull Employee employee, @NotNull Division division) {
         return Objects.equals(employee.getDivision(), division);
     }
@@ -288,7 +304,7 @@ public class EmployeeBook {
     /**
      * Меньше или равно
      */
-    public static final int LESS_EQ = -1;
+    public static final int LESS_OR_EQUAL = -1;
     /**
      * Равно
      */
@@ -296,7 +312,7 @@ public class EmployeeBook {
     /**
      * Больше или равно
      */
-    public static final int GREATER_EQ = 1;
+    public static final int GREATER_OR_EQUAL = 1;
     /**
      * Больше
      */
@@ -343,7 +359,7 @@ public class EmployeeBook {
                         result[index++] = employee;
                     }
                 }
-                case LESS_EQ -> {
+                case LESS_OR_EQUAL -> {
                     if (employee.getSalary().getValue() <= salary) {
                         result[index++] = employee;
                     }
@@ -353,7 +369,7 @@ public class EmployeeBook {
                         result[index++] = employee;
                     }
                 }
-                case GREATER_EQ -> {
+                case GREATER_OR_EQUAL -> {
                     if (employee.getSalary().getValue() >= salary) {
                         result[index++] = employee;
                     }

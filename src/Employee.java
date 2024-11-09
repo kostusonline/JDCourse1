@@ -161,6 +161,21 @@ public final class Employee {
     }
 
     /**
+     * Конструктор по умолчанию.<br>
+     * Создан только для удовлетворения анализатора.
+     */
+    public Employee() {
+        assert false;
+        this.freezeUpdateHash = true;
+        id = idTop++;
+        this.person = new Person();
+        setDivision(new Division());
+        this.salary = new Salary();
+        updateHash();
+        this.freezeUpdateHash = false;
+    }
+
+    /**
      * Основной конструктор.
      *
      * @param person   персона {@link Person}

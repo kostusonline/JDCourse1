@@ -113,6 +113,13 @@ public final class Salary {
     private final DecimalFormat currencyFormat;
 
     /**
+     * Конструктор по умолчанию.
+     */
+    public Salary() {
+        this(0, new SalaryVerifier(), null);
+    }
+
+    /**
      * Конструктор.
      *
      * @param salaryVerifier класс проверки установки величины заработной платы. Может быть null.

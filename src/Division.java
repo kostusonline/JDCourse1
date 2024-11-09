@@ -15,7 +15,7 @@ import java.util.Objects;
  * @author Константин Терских, kostus.online.1974@yandex.ru, 2024
  * @version 1.1
  */
-public class Division {
+public final class Division {
     /**
      * Отдел не определён
      */
@@ -46,6 +46,15 @@ public class Division {
      */
     @NotNull
     private final String name;
+
+    /**
+     * Конструктор по умолчанию.<br>
+     * Создан только для удовлетворения анализатора.
+     */
+    public Division() {
+        assert false;
+        this.name = DIVISION_UNKNOWN;
+    }
 
     /**
      * Конструктор.<br>
