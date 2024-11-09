@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.PrintStream;
+import java.util.Arrays;
 import java.util.Objects;
 
 /**
@@ -321,8 +322,13 @@ public class EmployeeBook {
         }
 
         Employee[] result = new Employee[maxCount];
+        Arrays.fill(result, null);
         int index = 0;
         for (Employee employee : employees) {
+            if (index >= maxCount) {
+                break;
+            }
+
             if (employee == null) {
                 continue;
             }
