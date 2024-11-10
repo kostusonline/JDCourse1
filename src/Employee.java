@@ -205,16 +205,14 @@ public final class Employee {
      * Конструктор с упрощённым вводом данных.
      *
      * @param person         персона {@link Person}
-     * @param divisionSign   название отдела {@link Division#getName()}
+     * @param division       отдел {@link Division}
      * @param salaryVerifier валидатор зарплаты {@link SalaryVerifier}
      * @param salaryValue    заработная плата {@link Salary#getValue()}
      */
     public Employee(@NotNull Person person,
-                    @NotNull String divisionSign,
+                    @NotNull Division division,
                     @NotNull SalaryVerifier salaryVerifier, double salaryValue) {
-        this(person,
-                new Division(divisionSign),
-                new Salary(salaryValue, salaryVerifier, null));
+        this(person, division, new Salary(salaryValue, salaryVerifier, null));
     }
 
     @Override

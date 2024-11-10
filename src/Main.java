@@ -14,20 +14,75 @@ import java.util.Objects;
  * @version 1.1
  */
 public class Main {
+    // Создадим все объекты статически для простоты манипулирования ими.
+
+    /**
+     * Валидатор зарплаты.
+     */
+    private static final SalaryVerifier salaryVerifier = new SalaryVerifier();
+    /**
+     * Валидатор имени.
+     */
+    private static final NameVerifier nameVerifier = new NameVerifier();
+    /**
+     * Мужской пол.
+     */
+    private static final Gender male = new Gender('m');
+    /**
+     * Женский пол.
+     */
+    private static final Gender female = new Gender('f');
+
+    private static final Person person0 = new Person(nameVerifier, "Иванов Иван Иванович", "06.02.1969", male);
+    private static final Person person1 = new Person(nameVerifier, "Семёнов Пётр Петрович", "07.05.1945", male);
+    private static final Person person2 = new Person(nameVerifier, "Шаталин Александр Александрович", "01.10.1954", male);
+    private static final Person person3 = new Person(nameVerifier, "Бортник Климент Янович", "02.12.1978", male);
+    private static final Person person4 = new Person(nameVerifier, "Волошин Ким Аркадьевич", "12.02.1996", male);
+    private static final Person person5 = new Person(nameVerifier, "Семенович Анна Григорьевна", "01.03.1978", female);
+    private static final Person person6 = new Person(nameVerifier, "Гунько Яков Семёнович", "10.12.1985", male);
+    private static final Person person7 = new Person(nameVerifier, "Сурдин Александр Борисович", "23.07.2001", male);
+    private static final Person person8 = new Person(nameVerifier, "Здунов Питер Ираклиевич", "20.06.1970", male);
+    private static final Person person9 = new Person(nameVerifier, "Семиконечный Серафим Валерьевич", "11.02.1979", male);
+
+    private static final Division division0 = new Division(Division.DIVISION_1);
+    private static final Division division1 = new Division(Division.DIVISION_2);
+    private static final Division division2 = new Division(Division.DIVISION_3);
+    private static final Division division3 = new Division(Division.DIVISION_4);
+    private static final Division division4 = new Division(Division.DIVISION_5);
+
+    private static final Employee employee0 = new Employee(person0, division0, salaryVerifier, 150_000);
+    private static final Employee employee1 = new Employee(person1, division0, salaryVerifier, 160_000);
+
+    private static final Employee employee2 = new Employee(person2, division1, salaryVerifier, 170_000);
+    private static final Employee employee3 = new Employee(person3, division1, salaryVerifier, 250_000);
+    private static final Employee employee4 = new Employee(person4, division1, salaryVerifier, 55_600);
+
+    private static final Employee employee5 = new Employee(person5, division2, salaryVerifier, 1_380_200);
+
+    private static final Employee employee6 = new Employee(person6, division3, salaryVerifier, 350_000);
+    private static final Employee employee7 = new Employee(person7, division3, salaryVerifier, 120_000);
+
+    private static final Employee employee8 = new Employee(person8, division4, salaryVerifier, 110_000);
+    private static final Employee employee9 = new Employee(person9, division4, salaryVerifier, 110_000);
+
     /**
      * Конструктор.
      */
     public Main() {
     }
 
+    /**
+     * Объект для вывода результатов.
+     */
     private static PrintWriter out;
+    /**
+     * Формат вывода чисел пл умолчанию.
+     */
     private static DecimalFormat currencyFormat;
 
-    private static final SalaryVerifier salaryVerifier = new SalaryVerifier();
-    private static final NameVerifier nameVerifier = new NameVerifier();
-    private static final Gender male = new Gender('m');
-    private static final Gender female = new Gender('f');
-
+    /**
+     * Тест отдела {@link Division}.
+     */
     private static void testDivision() {
         out.println("testDivision()");
 
@@ -55,6 +110,9 @@ public class Main {
         out.println();
     }
 
+    /**
+     * Тест пола {@link Gender}.
+     */
     private static void testGender() {
         out.println("testGender()");
 
@@ -83,6 +141,9 @@ public class Main {
         out.println();
     }
 
+    /**
+     * Тест зарплаты {@link Salary}.
+     */
     private static void testSalary() {
         out.println("testSalary()");
 
@@ -114,14 +175,17 @@ public class Main {
         out.println();
     }
 
+    /**
+     * Тест персоны {@link Person}.
+     */
     private static void testPerson() {
         out.println("testPerson()");
 
         var person1 = new Person(nameVerifier, "ивАнов", "Иван", "иванович",
                 1964, 2, 13, male);
-        var person2 = new Person(nameVerifier, "Сидоров Семён    семёнович", "19.05.1946", 'м');
-        var person2a = new Person(nameVerifier, "Сидоров Семён Семёнович", "19.05.1946", 'm');
-        var person3 = new Person(nameVerifier, "Сидоров Сергей    Собяньевич", "29.04.1967", 'м');
+        var person2 = new Person(nameVerifier, "Сидоров Семён    семёнович", "19.05.1946", male);
+        var person2a = new Person(nameVerifier, "Сидоров Семён Семёнович", "19.05.1946", male);
+        var person3 = new Person(nameVerifier, "Собакевич Собака    Собакович", "29.04.1967", male);
 
         if (Objects.equals(person2, person2a)) {
             out.println("person2 equals person2a");
@@ -142,6 +206,9 @@ public class Main {
         out.println();
     }
 
+    /**
+     * Тест сотрудника {@link Employee}.
+     */
     private static void testEmployee() {
         out.println("testEmployee()");
 
@@ -149,8 +216,8 @@ public class Main {
 
         int i = 0;
         employees[i++] = new Employee(
-                new Person(nameVerifier, "Иванов Иван Иванович", "16.04.1974", 'М'),
-                "1",
+                new Person(nameVerifier, "Иванов Иван Иванович", "16.04.1974", male),
+                division0,
                 salaryVerifier, 350_000);
 
         employees[i++] = new Employee(
@@ -160,7 +227,7 @@ public class Main {
                 new Salary(150_000, salaryVerifier, currencyFormat));
 
         employees[i++] = new Employee(
-                new Person(nameVerifier, "Лебедева Елена Петровна", "05.02.1990", 'Ж'),
+                new Person(nameVerifier, "Лебедева Елена Петровна", "05.02.1990", female),
                 new Division("3"),
                 new Salary(18_450, salaryVerifier, currencyFormat));
 
@@ -189,19 +256,28 @@ public class Main {
     public static final int EMPLOYEE_COUNT_DEFAULT = 10;
 
     /**
+     * Книга сотрудников.
+     */
+    private static final EmployeeBook employeeBook = new EmployeeBook(EMPLOYEE_COUNT_DEFAULT);
+
+    /**
      * Точка входа.
      *
      * @param args аргументы командной строки
      */
     public static void main(String[] args) {
+        // Создаём поток вывода
         final var charset = System.out.charset();
         System.out.printf("[charset: %s]%n", charset);
         out = new PrintWriter(System.out, true, charset);
 
+        // Запускаем тесты
         testDivision();
         testGender();
         testSalary();
         testPerson();
         testEmployee();
+
+        // ...
     }
 }

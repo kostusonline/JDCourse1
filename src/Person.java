@@ -334,12 +334,12 @@ public final class Person {
      * @param nameVerifier валидатор частей имени
      * @param fullName     ФИО в порядке "фамилия имя отчество"
      * @param birthDate    дата рождения в виде "день.месяц.год"
-     * @param genderSign   признак пола в виде "М" или "Ж"
+     * @param gender       пол
      */
     public Person(@NotNull NameVerifier nameVerifier,
                   @NotNull String fullName,
                   @NotNull String birthDate,
-                  char genderSign) {
+                  @NotNull Gender gender) {
         freezeUpdateHash = true;
 
         // Дурацкое решение для того, чтобы убрать предупреждения "not-null must be.."
@@ -349,7 +349,7 @@ public final class Person {
 
         this.nameVerifier = nameVerifier;
 
-        fullName = NameVerifier.removeContiguousSpaces(fullName);
+        fullName = this.nameVerifier.removeUnwantedChars(fullName);
         if (fullName == null) {
             throw new IllegalArgumentException("Некорректная строка полного имени");
         }
@@ -364,7 +364,7 @@ public final class Person {
         assert dateParts != null;
         setBirthDate(dateParts[2], dateParts[1], dateParts[0]);
 
-        gender = new Gender(genderSign);
+        this.gender = gender;
 
         freezeUpdateHash = false;
         updateHash();

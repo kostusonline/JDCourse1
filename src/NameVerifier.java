@@ -31,7 +31,7 @@ public class NameVerifier {
     public static final int CHARS_MAX_DEFAULT = 250;
 
     /**
-     * Разрешённые символы.
+     * Разрешённые символы. См. {@link #ALLOWED_CHARS_DEFAULT}.
      */
     @NotNull
     private final String allowedChars;
@@ -73,7 +73,7 @@ public class NameVerifier {
     }
 
     /**
-     * Единственный метод, который проверяет имя на валидность.
+     * Проверка имя на валидность по длине.
      *
      * @param str строка для проверки
      * @return результат проверки
@@ -88,57 +88,49 @@ public class NameVerifier {
         }
 
         int count = str.length();
-
-        if (count < minLength || count > maxLength) {
-            return false;
-        }
-
-        if (allowedChars.isEmpty()) {
-            return true;
-        }
-
-        for (int i = 0; i < count; i++) {
-            var ch = str.charAt(i);
-            if (allowedChars.indexOf(ch) < 0) {
-                return false;
-            }
-        }
-
-        return true;
+        return count >= minLength && count <= maxLength;
     }
 
     /**
      * Символ пробела.
      */
     public static final char SPACE = ' ';
+    /**
+     * Символ табуляции.
+     */
+    public static final char TAB = '\t';
 
     /**
-     * Удаление из строки всех подряд идущих пробелов.
+     * Удаление ненужных символов из строки:<br>
+     * подряд идущие пробелы и табуляции, цифры и т.п. См. {@link #allowedChars}.
      *
      * @param source исходная строка
      * @return нормализованная строка
      */
     @Nullable
-    public static String removeContiguousSpaces(@Nullable String source) {
+    public String removeUnwantedChars(@Nullable String source) {
         if (source == null) {
             return null;
         }
 
+        // сначала просто обрезаем строку слева и справа
         source = source.trim();
         int count = source.length();
         if (count <= 1) {
             return source;
         }
 
+        // затем уже строим новую строку, проверяя каждый символ
         var sb = new StringBuilder();
         char lastAppended = 0;
         for (int i = 0; i < count; i++) {
             char currentChar = source.charAt(i);
 
-            if (currentChar != SPACE) {
-                sb.append(currentChar);
-            } else if (lastAppended != SPACE) {
-                sb.append(currentChar);
+            // убираем идущие подряд пробелы и табуляции
+            if (currentChar != SPACE && currentChar != TAB) {
+                appendIfAllowed(sb, currentChar);
+            } else if (lastAppended != SPACE && lastAppended != TAB) {
+                appendIfAllowed(sb, currentChar);
             }
             lastAppended = currentChar;
         }
@@ -146,8 +138,15 @@ public class NameVerifier {
         return sb.toString();
     }
 
+    public void appendIfAllowed(@NotNull StringBuilder sb, char ch) {
+        if (allowedChars.indexOf(ch) < 0) {
+            return;
+        }
+        sb.append(ch);
+    }
+
     /**
-     * Нормализация строки. Пока только капитализация с затрагиванием всех символов строки.<br>
+     * Нормализация строки. Только капитализация с затрагиванием всех символов строки.<br>
      *
      * @param str ненормализованная строка; пример: иВаНОв
      * @return нормализованная строка; пример: Иванов;<br>

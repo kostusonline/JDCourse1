@@ -3,6 +3,11 @@
 // Константин Терских, kostus.online.1974@yandex.ru, 2024
 // https://google.github.io/styleguide/javaguide.html
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 /**
  * Проверка величины заработной платы.
  *
@@ -60,5 +65,18 @@ public class SalaryVerifier {
      */
     public boolean isGood(Double salary) {
         return minSalary <= salary && salary <= maxSalary;
+    }
+
+    /**
+     * Аннотация для метода тестирования.<br>
+     * <a href="https://ru.stackoverflow.com/questions/842593/">...</a>Условная-компиляция
+     *
+     * @author Константин Терских, kostus.online.1974@yandex.ru, 2024
+     * @version 1.1
+     */
+    @Retention(RetentionPolicy.SOURCE)  // Аннотация существует только до компиляции
+    @Target(ElementType.METHOD)
+    public static @interface Test {
+        boolean value() default true;
     }
 }
