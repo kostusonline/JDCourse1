@@ -138,6 +138,12 @@ public class NameVerifier {
         return sb.toString();
     }
 
+    /**
+     * Присоединение символа к строке, если символ разрешён.
+     *
+     * @param sb StringBuilder
+     * @param ch char
+     */
     public void appendIfAllowed(@NotNull StringBuilder sb, char ch) {
         if (allowedChars.indexOf(ch) < 0) {
             return;

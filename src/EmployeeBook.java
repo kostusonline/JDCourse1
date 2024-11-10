@@ -38,6 +38,7 @@ public class EmployeeBook {
      *
      * @param employees массив записей о сотрудниках
      */
+    @SuppressWarnings("unused")
     public EmployeeBook(@NotNull Employee[] employees) {
         this.employees = employees;
     }
@@ -132,60 +133,9 @@ public class EmployeeBook {
     }
 
     /**
-     * Печать всех сотрудников.
-     *
-     * @param out поток вывода
-     */
-    public void printEmployees(@NotNull PrintWriter out, @Nullable Division division) {
-        for (Employee employee : employees) {
-            if (employee == null) {
-                continue;
-            }
-
-            if (division != null && !matchDivision(employee, division)) {
-                continue;
-            }
-
-            out.print("\t");
-            out.println(employee);
-        }
-    }
-
-    /**
      * Сообщение о том, что книга {@link #employees} не наёдена.
      */
     public static final String BOOK_NOT_FOUND = "Книга не найдена";
-
-    /**
-     * Печать всех сотрудников в строку.
-     */
-    @Override
-    public String toString() {
-        if (employees == null) {
-            return BOOK_NOT_FOUND;
-        }
-        StringBuilder sb = new StringBuilder();
-        for (Employee employee : employees) {
-            if (employee != null) {
-                sb.append("\t").append(employee).append("\n");
-            }
-        }
-        return sb.toString();
-    }
-
-    @NotNull
-    public String toStringShort() {
-        if (employees == null) {
-            return BOOK_NOT_FOUND;
-        }
-        StringBuilder sb = new StringBuilder();
-        for (Employee employee : employees) {
-            if (employee != null) {
-                sb.append("\t").append(employee.toStringShort()).append("\n");
-            }
-        }
-        return sb.toString();
-    }
 
     /**
      * Проверка сотрудника на принадлежность к отделу.
@@ -375,6 +325,7 @@ public class EmployeeBook {
      *
      * @param salary   граница зарплаты
      * @param compare  вид сравнения с границей зарплаты
+     * @param maxCount максимальное количество элементов в выходном массиве
      * @param division отдел {@link Division} или {@code null}
      * @return выбранные сотрудники
      */
@@ -437,5 +388,67 @@ public class EmployeeBook {
             }
         }
         return result;
+    }
+
+    /**
+     * Печать всех сотрудников в строку.
+     *
+     * @return строки информации о сотрудниках
+     */
+    @Override
+    public String toString() {
+        if (employees == null) {
+            return BOOK_NOT_FOUND;
+        }
+        StringBuilder sb = new StringBuilder();
+        for (Employee employee : employees) {
+            if (employee != null) {
+                sb.append("\t").append(employee).append("\n");
+            }
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Возвращает короткую версию информации о каждом сотруднике плюс выбранные поля.
+     *
+     * @param withId       выводить id
+     * @param withDivision выводить отдел
+     * @param withSalary   выводить зарплату
+     * @return информация о каждом сотруднике
+     */
+    @NotNull
+    public String toStringShort(boolean withId, boolean withDivision, boolean withSalary) {
+        if (employees == null) {
+            return BOOK_NOT_FOUND;
+        }
+        StringBuilder sb = new StringBuilder();
+        for (Employee employee : employees) {
+            if (employee != null) {
+                sb.append("\t").append(employee.toStringShort(withId, withDivision, withSalary)).append("\n");
+            }
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Печать всех сотрудников.
+     *
+     * @param out      поток вывода
+     * @param division отдел
+     */
+    public void printEmployees(@NotNull PrintWriter out, @Nullable Division division) {
+        for (Employee employee : employees) {
+            if (employee == null) {
+                continue;
+            }
+
+            if (division != null && !matchDivision(employee, division)) {
+                continue;
+            }
+
+            out.print("\t");
+            out.println(employee);
+        }
     }
 }

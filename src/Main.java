@@ -187,7 +187,7 @@ public class Main {
                 1964, 2, 13, male);
         var person2 = new Person(nameVerifier, "Сидоров Семён    семёнович", "19.05.1946", male);
         var person2a = new Person(nameVerifier, "Сидоров Семён Семёнович", "19.05.1946", male);
-        var person3 = new Person(nameVerifier, "Собакевич Собака    Собакович", "29.04.1967", male);
+        var person3 = new Person(nameVerifier, "Собакевич Собака    Терентьевич", "29.04.1967", male);
 
         if (Objects.equals(person2, person2a)) {
             out.println("person2 equals person2a");
@@ -228,7 +228,7 @@ public class Main {
                 new Division("1"),
                 new Salary(150_000, salaryVerifier, currencyFormat));
 
-        employees[i++] = new Employee(
+        employees[i] = new Employee(
                 new Person(nameVerifier, "Лебедева Елена Петровна", "05.02.1990", female),
                 new Division("3"),
                 new Salary(18_450, salaryVerifier, currencyFormat));
@@ -246,7 +246,7 @@ public class Main {
         for (Employee employee : employees) {
             if (employee != null) {
                 out.print("\t");
-                out.println(employee.toStringShort());
+                out.println(employee.toStringShort(true, true,true));
             }
         }
         out.println();
@@ -274,11 +274,11 @@ public class Main {
         out = new PrintWriter(System.out, true, charset);
 
         // Запускаем тесты
-//        testDivision();
-//        testGender();
-//        testSalary();
-//        testPerson();
-//        testEmployee();
+        testDivision();
+        testGender();
+        testSalary();
+        testPerson();
+        testEmployee();
 
         // Напишите программу, которая занимается учетом сотрудников и
         // помогает кадрам и бухгалтерии автоматизировать процессы.
@@ -314,7 +314,7 @@ public class Main {
         out.println();
 
         out.println("Список всех сотрудников через toStringShort():");
-        out.println(employeeBook.toStringShort());
+        out.println(employeeBook.toStringShort(true, true, true));
         out.println();
 
         double salaryBorder = 120_000;
@@ -330,52 +330,64 @@ public class Main {
         out.close();
     }
 
+    /**
+     * Выполнить действия над сотрудниками:<br>
+     * ЗП: сумма, средняя, беднейший/богатейший сотрудник, бедные и богатые,<br>
+     * индексация.
+     *
+     * @param division           отдел
+     * @param salaryBorder       граница зарплаты
+     * @param positivePercentage процент от зарплаты
+     */
     private static void performAction(@Nullable Division division,
                                       double salaryBorder, double positivePercentage) {
         // Идентифицируем список в зависимости от отдела.
         String groupIdentity = "все сотрудники";
         if (division != null) {
-            groupIdentity = " отдел " + division;
+            groupIdentity = "отдел " + division;
         }
 
         // Сумма ЗП.
         double salarySum = employeeBook.getSalarySum(division);
         out.printf("Сумма зарплат, %s: %s%n", groupIdentity, currencyFormat.format(salarySum));
 
-        // Сотрудник с наименьшей ЗП
+        // Самый бедный.
         var poorestEmployee = employeeBook.getEmployeePoorest(division);
         if (poorestEmployee != null) {
-            out.printf("Сотрудник с наименьшей ЗП, %s: %s%n", groupIdentity, poorestEmployee.toString(division));
+            out.printf("Сотрудник с наименьшей ЗП, %s: %s%n", groupIdentity,
+                    poorestEmployee.toStringShort(true, division != null, true));
         }
 
-        // Сотрудник с наибольшей ЗП
+        // Самый богатый.
         var richestEmployee = employeeBook.getEmployeeRichest(division);
         if (richestEmployee != null) {
-            out.printf("Сотрудник с наибольшей ЗП, %s: %s%n", groupIdentity, richestEmployee.toString(division));
+            out.printf("Сотрудник с наибольшей ЗП, %s: %s%n", groupIdentity,
+                    richestEmployee.toStringShort(true,division != null, true));
         }
 
-        // Средняя ЗП
+        // Средняя ЗП.
         double salaryAverage = employeeBook.getSalaryAverage(division);
         out.printf("Средняя ЗП, %s: %s%n", groupIdentity, currencyFormat.format(salaryAverage));
 
+        // Бедные.
         var sadSide = employeeBook.getEmployees(salaryBorder,
                 EmployeeBook.LESS, EMPLOYEE_COUNT_DEFAULT, division);
         out.println("Сотрудники с зарплатой ниже " + currencyFormat.format(salaryBorder) + ":");
         for (var employee : sadSide) {
-            out.println(employee.toString(division));
+            out.println(employee.toStringShort(true,division != null, true));
         }
 
+        // Богатые.
         var joySide = employeeBook.getEmployees(salaryBorder,
                 EmployeeBook.GREATER_OR_EQUAL, EMPLOYEE_COUNT_DEFAULT, division);
         out.println("Сотрудники с зарплатой равной или выше " + currencyFormat.format(salaryBorder) + ":");
         for (var employee : joySide) {
-            out.println(employee.toString(division));
+            out.println(employee.toStringShort(true, division != null, true));
         }
 
-        // Индексация зарплаты
+        // Индексация.
         employeeBook.performSalaryIndexing(division, positivePercentage);
-        for (var employee : employeeBook.getEmployees()) {
-            out.println(employee.toString(division));
-        }
+        out.printf("После индексации на %f%%, %s:%n", positivePercentage, groupIdentity);
+        out.println(employeeBook.toStringShort(true, division != null, true));
     }
 }

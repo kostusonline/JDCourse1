@@ -185,7 +185,6 @@ public final class Person {
      * @return пол
      */
     @NotNull
-    @SuppressWarnings("unused")
     public Gender getGender() {
         return gender;
     }
@@ -373,13 +372,13 @@ public final class Person {
     /**
      * Возвращает полное строковое представление персоны.
      *
-     * @return полное строковое представление персоны
+     * @return полное строковое представление
      */
     @Override
     public String toString() {
         return String.format("%s %s %s, %s, %s",
-                lastName, firstName, middleName,
-                gender,
+                getLastName(), getFirstName(), getMiddleName(),
+                getGender(),
                 getBirthDate(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
     }
 
@@ -391,6 +390,6 @@ public final class Person {
     @NotNull
     public String toStringShort() {
         return String.format("%s %s %s",
-                lastName, firstName, middleName);
+                getLastName(), getFirstName(), getMiddleName());
     }
 }

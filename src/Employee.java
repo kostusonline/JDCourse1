@@ -4,7 +4,6 @@
 // https://google.github.io/styleguide/javaguide.html
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -219,7 +218,7 @@ public final class Employee {
     /**
      * Вывод полной информации о сотруднике.
      *
-     * @return полная информация о сотруднике
+     * @return id, персональная информация, отдел, зарплата
      */
     @Override
     public String toString() {
@@ -227,36 +226,30 @@ public final class Employee {
     }
 
     /**
-     * Вывод полной информации о сотруднике с указанием отдела или без указания.
+     * Возвращает короткую версию информации о сотруднике плюс выбранные поля.
      *
-     * @param division отдел {@link Division}. Здесь отдел - это просто флаг:<br>
-     *                 если {@code null}, то отдел выводится, если не {@code null}, то отдел выводится.
+     * @param withId       выводить id
+     * @param withDivision выводить отдел
+     * @param withSalary   выводить зарплату
+     * @return информация о сотруднике
      */
     @NotNull
-    public String toString(@Nullable Division division) {
-        if (division != null) {
-            return toString();
+    public String toStringShort(boolean withId, boolean withDivision, boolean withSalary) {
+        var sb = new StringBuilder();
+        if (withId) {
+            sb.append(String.format("ID: %d, ", getId()));
         }
-        return String.format("ID: %d, %s, отдел %s, %s", id, person, this.division, salary);
-    }
 
-    /**
-     * Вывод полной информации о сотруднике без отдела.
-     *
-     * @return полная информация о сотруднике без отдела
-     */
-    @NotNull
-    public String toStringWithoutDivision() {
-        return String.format("ID: %d, %s, %s", id, person, salary);
-    }
+        sb.append(String.format("%s, ", person.toStringShort()));
 
-    /**
-     * Возвращает только ФИО сотрудника.
-     *
-     * @return ФИО сотрудника
-     */
-    @NotNull
-    public String toStringShort() {
-        return person.toStringShort();
+        if (withDivision) {
+            sb.append(String.format("отдел %s", getDivision()));
+        }
+
+        if (withSalary) {
+            sb.append(String.format(", %s", getSalary()));
+        }
+
+        return sb.toString();
     }
 }
