@@ -6,7 +6,7 @@
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -18,7 +18,8 @@ import java.util.Objects;
  */
 public class EmployeeBook {
     /**
-     * Простое хранилище записей о сотрудниках. Размер задаётся в конструкторе {@link EmployeeBook}.
+     * Простое хранилище записей {@link Employee} о сотрудниках.<br>
+     * Размер задаётся в конструкторе {@link EmployeeBook}.
      */
     private final Employee[] employees;
 
@@ -56,12 +57,14 @@ public class EmployeeBook {
     public static final int NOT_FOUND = -1;
 
     /**
-     * Получение первой от нуля свободной ячейки в хранилище<br>
+     * Получение первой от нуля свободной или занятой ячейки в хранилище.<br>
      * с учётом или без учёта отдела.
      *
+     * @param division отдел
+     * @param free     свободная или занятая ячейка
      * @return индекс свободной ячейки или {@link EmployeeBook#NOT_FOUND}
      */
-    private int getFirstFreeIndex(@Nullable Division division) {
+    private int getFirstIndex(@Nullable Division division, boolean free) {
         if (employees == null) {
             return NOT_FOUND;
         }
@@ -70,8 +73,16 @@ public class EmployeeBook {
             if (division != null && !matchDivision(employees[i], division)) {
                 continue;
             }
-            if (employees[i] != null) {
-                return i;
+
+            // Проверка наличия свободной ячейки
+            if (free) {
+                if (employees[i] == null) {
+                    return i;
+                }
+            } else {
+                if (employees[i] != null) {
+                    return i;
+                }
             }
         }
         return NOT_FOUND;
@@ -81,15 +92,13 @@ public class EmployeeBook {
      * Добавление нового сотрудника в хранилище.
      *
      * @param employee запись о сотруднике {@link Employee}
-     * @return {@code true} если добавление прошло успешно
      */
-    public boolean tryAddEmployee(@NotNull Employee employee) {
-        int freeIndex = getFirstFreeIndex(null);
+    public void addEmployee(@NotNull Employee employee) {
+        int freeIndex = getFirstIndex(null, true);
         if (freeIndex == NOT_FOUND) {
-            return false;
+            return;
         }
         employees[freeIndex] = employee;
-        return true;
     }
 
     /**
@@ -127,13 +136,55 @@ public class EmployeeBook {
      *
      * @param out поток вывода
      */
-    public void printEmployees(@NotNull PrintStream out) {
+    public void printEmployees(@NotNull PrintWriter out, @Nullable Division division) {
+        for (Employee employee : employees) {
+            if (employee == null) {
+                continue;
+            }
+
+            if (division != null && !matchDivision(employee, division)) {
+                continue;
+            }
+
+            out.print("\t");
+            out.println(employee);
+        }
+    }
+
+    /**
+     * Сообщение о том, что книга {@link #employees} не наёдена.
+     */
+    public static final String BOOK_NOT_FOUND = "Книга не найдена";
+
+    /**
+     * Печать всех сотрудников в строку.
+     */
+    @Override
+    public String toString() {
+        if (employees == null) {
+            return BOOK_NOT_FOUND;
+        }
+        StringBuilder sb = new StringBuilder();
         for (Employee employee : employees) {
             if (employee != null) {
-                out.print("\t");
-                out.println(employee);
+                sb.append("\t").append(employee).append("\n");
             }
         }
+        return sb.toString();
+    }
+
+    @NotNull
+    public String toStringShort() {
+        if (employees == null) {
+            return BOOK_NOT_FOUND;
+        }
+        StringBuilder sb = new StringBuilder();
+        for (Employee employee : employees) {
+            if (employee != null) {
+                sb.append("\t").append(employee.toStringShort()).append("\n");
+            }
+        }
+        return sb.toString();
     }
 
     /**
@@ -222,13 +273,13 @@ public class EmployeeBook {
      */
     @Nullable
     public Employee getEmployeePoorest(@Nullable Division division) {
-        int index = getFirstFreeIndex(division);
-        if (index == NOT_FOUND) {
+        int startIndex = getFirstIndex(division, false);
+        if (startIndex == NOT_FOUND) {
             return null;
         }
 
-        Employee poorest = employees[index];
-        for (int i = index + 1; i < employees.length; i++) {
+        Employee poorest = employees[startIndex];
+        for (int i = startIndex + 1; i < employees.length; i++) {
             if (employees[i] == null) {
                 continue;
             }
@@ -252,13 +303,13 @@ public class EmployeeBook {
      */
     @Nullable
     public Employee getEmployeeRichest(@Nullable Division division) {
-        int index = getFirstFreeIndex(division);
-        if (index == NOT_FOUND) {
+        int startIndex = getFirstIndex(division, false);
+        if (startIndex == NOT_FOUND) {
             return null;
         }
 
-        Employee richest = employees[index];
-        for (int i = index + 1; i < employees.length; i++) {
+        Employee richest = employees[startIndex];
+        for (int i = startIndex + 1; i < employees.length; i++) {
             if (employees[i] == null) {
                 continue;
             }

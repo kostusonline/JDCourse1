@@ -370,10 +370,16 @@ public final class Person {
         updateHash();
     }
 
+    /**
+     * Возвращает полное строковое представление персоны.
+     *
+     * @return полное строковое представление персоны
+     */
     @Override
     public String toString() {
         return String.format("%s %s %s, %s, %s",
-                lastName, firstName, middleName, gender,
+                lastName, firstName, middleName,
+                gender,
                 getBirthDate(DateTimeFormatter.ofPattern("dd.MM.yyyy")));
     }
 
@@ -382,6 +388,7 @@ public final class Person {
      *
      * @return ФИО
      */
+    @NotNull
     public String toStringShort() {
         return String.format("%s %s %s",
                 lastName, firstName, middleName);

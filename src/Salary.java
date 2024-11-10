@@ -97,11 +97,6 @@ public final class Salary {
         return Objects.hash(salary);
     }
 
-    @Override
-    public String toString() {
-        return String.format("%s", currencyFormat.format(salary));
-    }
-
     /**
      * Формат вывода заработной платы по умолчанию.
      */
@@ -112,6 +107,16 @@ public final class Salary {
      */
     @NotNull
     private final DecimalFormat currencyFormat;
+
+    /**
+     * Возвращает полное строковое представление заработной платы.
+     *
+     * @return полное строковое представление заработной платы
+     */
+    @Override
+    public String toString() {
+        return String.format("%s", currencyFormat.format(salary));
+    }
 
     /**
      * Конструктор по умолчанию.

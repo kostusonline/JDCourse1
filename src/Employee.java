@@ -4,6 +4,7 @@
 // https://google.github.io/styleguide/javaguide.html
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -215,9 +216,38 @@ public final class Employee {
         this(person, division, new Salary(salaryValue, salaryVerifier, null));
     }
 
+    /**
+     * Вывод полной информации о сотруднике.
+     *
+     * @return полная информация о сотруднике
+     */
     @Override
     public String toString() {
         return String.format("ID: %d, %s, отдел %s, %s", id, person, division, salary);
+    }
+
+    /**
+     * Вывод полной информации о сотруднике с указанием отдела или без указания.
+     *
+     * @param division отдел {@link Division}. Здесь отдел - это просто флаг:<br>
+     *                 если {@code null}, то отдел выводится, если не {@code null}, то отдел выводится.
+     */
+    @NotNull
+    public String toString(@Nullable Division division) {
+        if (division != null) {
+            return toString();
+        }
+        return String.format("ID: %d, %s, отдел %s, %s", id, person, this.division, salary);
+    }
+
+    /**
+     * Вывод полной информации о сотруднике без отдела.
+     *
+     * @return полная информация о сотруднике без отдела
+     */
+    @NotNull
+    public String toStringWithoutDivision() {
+        return String.format("ID: %d, %s, %s", id, person, salary);
     }
 
     /**
@@ -225,7 +255,8 @@ public final class Employee {
      *
      * @return ФИО сотрудника
      */
-    public String toShortString() {
-        return String.format("%s %s %s", person.getLastName(), person.getFirstName(), person.getMiddleName());
+    @NotNull
+    public String toStringShort() {
+        return person.toStringShort();
     }
 }

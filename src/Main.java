@@ -3,6 +3,8 @@
 // Константин Терских, kostus.online.1974@yandex.ru, 2024
 // https://google.github.io/styleguide/javaguide.html
 
+import org.jetbrains.annotations.Nullable;
+
 import java.io.PrintWriter;
 import java.text.DecimalFormat;
 import java.util.Objects;
@@ -44,26 +46,26 @@ public class Main {
     private static final Person person8 = new Person(nameVerifier, "Здунов Питер Ираклиевич", "20.06.1970", male);
     private static final Person person9 = new Person(nameVerifier, "Семиконечный Серафим Валерьевич", "11.02.1979", male);
 
-    private static final Division division0 = new Division(Division.DIVISION_1);
-    private static final Division division1 = new Division(Division.DIVISION_2);
-    private static final Division division2 = new Division(Division.DIVISION_3);
-    private static final Division division3 = new Division(Division.DIVISION_4);
-    private static final Division division4 = new Division(Division.DIVISION_5);
+    private static final Division division1 = new Division(Division.DIVISION_1);
+    private static final Division division2 = new Division(Division.DIVISION_2);
+    private static final Division division3 = new Division(Division.DIVISION_3);
+    private static final Division division4 = new Division(Division.DIVISION_4);
+    private static final Division division5 = new Division(Division.DIVISION_5);
 
-    private static final Employee employee0 = new Employee(person0, division0, salaryVerifier, 150_000);
-    private static final Employee employee1 = new Employee(person1, division0, salaryVerifier, 160_000);
+    private static final Employee employee0 = new Employee(person0, division1, salaryVerifier, 150_000);
+    private static final Employee employee1 = new Employee(person1, division1, salaryVerifier, 160_000);
 
-    private static final Employee employee2 = new Employee(person2, division1, salaryVerifier, 170_000);
-    private static final Employee employee3 = new Employee(person3, division1, salaryVerifier, 250_000);
-    private static final Employee employee4 = new Employee(person4, division1, salaryVerifier, 55_600);
+    private static final Employee employee2 = new Employee(person2, division2, salaryVerifier, 170_000);
+    private static final Employee employee3 = new Employee(person3, division2, salaryVerifier, 250_000);
+    private static final Employee employee4 = new Employee(person4, division2, salaryVerifier, 55_600);
 
-    private static final Employee employee5 = new Employee(person5, division2, salaryVerifier, 1_380_200);
+    private static final Employee employee5 = new Employee(person5, division3, salaryVerifier, 1_380_200);
 
-    private static final Employee employee6 = new Employee(person6, division3, salaryVerifier, 350_000);
-    private static final Employee employee7 = new Employee(person7, division3, salaryVerifier, 120_000);
+    private static final Employee employee6 = new Employee(person6, division4, salaryVerifier, 350_000);
+    private static final Employee employee7 = new Employee(person7, division4, salaryVerifier, 120_000);
 
-    private static final Employee employee8 = new Employee(person8, division4, salaryVerifier, 110_000);
-    private static final Employee employee9 = new Employee(person9, division4, salaryVerifier, 110_000);
+    private static final Employee employee8 = new Employee(person8, division5, salaryVerifier, 110_000);
+    private static final Employee employee9 = new Employee(person9, division5, salaryVerifier, 110_000);
 
     /**
      * Конструктор.
@@ -78,7 +80,7 @@ public class Main {
     /**
      * Формат вывода чисел пл умолчанию.
      */
-    private static DecimalFormat currencyFormat;
+    private static final DecimalFormat currencyFormat = new DecimalFormat(Salary.CURRENCY_FORMAT_DEFAULT);
 
     /**
      * Тест отдела {@link Division}.
@@ -217,7 +219,7 @@ public class Main {
         int i = 0;
         employees[i++] = new Employee(
                 new Person(nameVerifier, "Иванов Иван Иванович", "16.04.1974", male),
-                division0,
+                division1,
                 salaryVerifier, 350_000);
 
         employees[i++] = new Employee(
@@ -244,7 +246,7 @@ public class Main {
         for (Employee employee : employees) {
             if (employee != null) {
                 out.print("\t");
-                out.println(employee.toShortString());
+                out.println(employee.toStringShort());
             }
         }
         out.println();
@@ -272,12 +274,108 @@ public class Main {
         out = new PrintWriter(System.out, true, charset);
 
         // Запускаем тесты
-        testDivision();
-        testGender();
-        testSalary();
-        testPerson();
-        testEmployee();
+//        testDivision();
+//        testGender();
+//        testSalary();
+//        testPerson();
+//        testEmployee();
 
-        // ...
+        // Напишите программу, которая занимается учетом сотрудников и
+        // помогает кадрам и бухгалтерии автоматизировать процессы.
+        //
+        // С помощью вашей программы бухгалтерия и отдел кадров смогут узнавать следующую информацию:
+        // Получить список всех сотрудников;
+        // Посчитать сумму затрат на ЗП;
+        // Найти сотрудника с минимальной ЗП;
+        // Найти сотрудника с максимальной ЗП;
+        // Подсчитать среднее значение зарплат.
+
+        // Заполним книгу полностью
+        employeeBook.addEmployee(employee0);
+        employeeBook.addEmployee(employee1);
+        employeeBook.addEmployee(employee2);
+        employeeBook.addEmployee(employee3);
+        employeeBook.addEmployee(employee4);
+        employeeBook.addEmployee(employee5);
+        employeeBook.addEmployee(employee6);
+        employeeBook.addEmployee(employee7);
+        employeeBook.addEmployee(employee8);
+        employeeBook.addEmployee(employee9);
+
+        // Печать полного списка разными способами.
+        //
+
+        out.println("Список всех сотрудников через printEmployees(out):");
+        employeeBook.printEmployees(out, null);
+        out.println();
+
+        out.println("Список всех сотрудников через toString():");
+        out.println(employeeBook);
+        out.println();
+
+        out.println("Список всех сотрудников через toStringShort():");
+        out.println(employeeBook.toStringShort());
+        out.println();
+
+        double salaryBorder = 120_000;
+        double positivePercentage = 10;
+
+        // Операции со всеми сотрудниками в книге.
+        performAction(null, salaryBorder, positivePercentage);
+
+        // Операции с сотрудниками выбранного отдела.
+        performAction(division5, salaryBorder, positivePercentage + 5);
+
+        out.println("Программа завершила работу.");
+        out.close();
+    }
+
+    private static void performAction(@Nullable Division division,
+                                      double salaryBorder, double positivePercentage) {
+        // Идентифицируем список в зависимости от отдела.
+        String groupIdentity = "все сотрудники";
+        if (division != null) {
+            groupIdentity = " отдел " + division;
+        }
+
+        // Сумма ЗП.
+        double salarySum = employeeBook.getSalarySum(division);
+        out.printf("Сумма зарплат, %s: %s%n", groupIdentity, currencyFormat.format(salarySum));
+
+        // Сотрудник с наименьшей ЗП
+        var poorestEmployee = employeeBook.getEmployeePoorest(division);
+        if (poorestEmployee != null) {
+            out.printf("Сотрудник с наименьшей ЗП, %s: %s%n", groupIdentity, poorestEmployee.toString(division));
+        }
+
+        // Сотрудник с наибольшей ЗП
+        var richestEmployee = employeeBook.getEmployeeRichest(division);
+        if (richestEmployee != null) {
+            out.printf("Сотрудник с наибольшей ЗП, %s: %s%n", groupIdentity, richestEmployee.toString(division));
+        }
+
+        // Средняя ЗП
+        double salaryAverage = employeeBook.getSalaryAverage(division);
+        out.printf("Средняя ЗП, %s: %s%n", groupIdentity, currencyFormat.format(salaryAverage));
+
+        var sadSide = employeeBook.getEmployees(salaryBorder,
+                EmployeeBook.LESS, EMPLOYEE_COUNT_DEFAULT, division);
+        out.println("Сотрудники с зарплатой ниже " + currencyFormat.format(salaryBorder) + ":");
+        for (var employee : sadSide) {
+            out.println(employee.toString(division));
+        }
+
+        var joySide = employeeBook.getEmployees(salaryBorder,
+                EmployeeBook.GREATER_OR_EQUAL, EMPLOYEE_COUNT_DEFAULT, division);
+        out.println("Сотрудники с зарплатой равной или выше " + currencyFormat.format(salaryBorder) + ":");
+        for (var employee : joySide) {
+            out.println(employee.toString(division));
+        }
+
+        // Индексация зарплаты
+        employeeBook.performSalaryIndexing(division, positivePercentage);
+        for (var employee : employeeBook.getEmployees()) {
+            out.println(employee.toString(division));
+        }
     }
 }
