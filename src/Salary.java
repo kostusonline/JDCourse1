@@ -73,7 +73,7 @@ public final class Salary {
         double newSalary = salary + delta;
 
         if (!salaryVerifier.isGood(newSalary)) {
-            throw new IllegalArgumentException("Недопустимое значение заработной платы");
+            throw new IllegalArgumentException("Недопустимое значение заработной платы: " + newSalary);
         }
 
         salary = newSalary;

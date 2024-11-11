@@ -78,9 +78,19 @@ public class Main {
      */
     private static PrintWriter out;
     /**
-     * Формат вывода чисел пл умолчанию.
+     * Формат вывода валюты по умолчанию.
      */
     private static final DecimalFormat currencyFormat = new DecimalFormat(Salary.CURRENCY_FORMAT_DEFAULT);
+
+    /**
+     * Формат вывода чисел по умолчанию.
+     */
+    public static final String NUMBER_FORMAT_DEFAULT = "#,###.#";
+
+    /**
+     * Формат вывода чисел по умолчанию.
+     */
+    private static final DecimalFormat numberFormat = new DecimalFormat(NUMBER_FORMAT_DEFAULT);
 
     /**
      * Тест отдела {@link Division}.
@@ -246,7 +256,7 @@ public class Main {
         for (Employee employee : employees) {
             if (employee != null) {
                 out.print("\t");
-                out.println(employee.toStringShort(true, true,true));
+                out.println(employee.toStringShort(true, true, true));
             }
         }
         out.println();
@@ -305,8 +315,12 @@ public class Main {
         // Печать полного списка разными способами.
         //
 
-        out.println("Список всех сотрудников через printEmployees(out):");
+        out.println("Список всех сотрудников через printEmployees():");
         employeeBook.printEmployees(out, null);
+        out.println();
+
+        out.println("Список сотрудников отдела " + division1 + " через printEmployees():");
+        employeeBook.printEmployees(out, division1);
         out.println();
 
         out.println("Список всех сотрудников через toString():");
@@ -317,14 +331,14 @@ public class Main {
         out.println(employeeBook.toStringShort(true, true, true));
         out.println();
 
-        double salaryBorder = 120_000;
-        double positivePercentage = 10;
-
         // Операции со всеми сотрудниками в книге.
-        performAction(null, salaryBorder, positivePercentage);
+        performAction(null, 120_000, 10);
 
         // Операции с сотрудниками выбранного отдела.
-        performAction(division5, salaryBorder, positivePercentage + 5);
+        performAction(division2, 170_000, 15);
+
+        // Явная демонстрация CRUD.
+        performCRUD();
 
         out.println("Программа завершила работу.");
         out.close();
@@ -341,6 +355,9 @@ public class Main {
      */
     private static void performAction(@Nullable Division division,
                                       double salaryBorder, double positivePercentage) {
+        out.println(String.format("performAction(%s, %s, %s)%n", division,
+                numberFormat.format(salaryBorder), numberFormat.format(positivePercentage)));
+
         // Идентифицируем список в зависимости от отдела.
         String groupIdentity = "все сотрудники";
         if (division != null) {
@@ -362,7 +379,7 @@ public class Main {
         var richestEmployee = employeeBook.getEmployeeRichest(division);
         if (richestEmployee != null) {
             out.printf("Сотрудник с наибольшей ЗП, %s: %s%n", groupIdentity,
-                    richestEmployee.toStringShort(true,division != null, true));
+                    richestEmployee.toStringShort(true, division != null, true));
         }
 
         // Средняя ЗП.
@@ -374,7 +391,10 @@ public class Main {
                 EmployeeBook.LESS, EMPLOYEE_COUNT_DEFAULT, division);
         out.println("Сотрудники с зарплатой ниже " + currencyFormat.format(salaryBorder) + ":");
         for (var employee : sadSide) {
-            out.println(employee.toStringShort(true,division != null, true));
+            if (employee == null) {
+                break;
+            }
+            out.println(employee.toStringShort(true, division != null, true));
         }
 
         // Богатые.
@@ -382,12 +402,45 @@ public class Main {
                 EmployeeBook.GREATER_OR_EQUAL, EMPLOYEE_COUNT_DEFAULT, division);
         out.println("Сотрудники с зарплатой равной или выше " + currencyFormat.format(salaryBorder) + ":");
         for (var employee : joySide) {
+            if (employee == null) {
+                break;
+            }
             out.println(employee.toStringShort(true, division != null, true));
         }
 
         // Индексация.
         employeeBook.performSalaryIndexing(division, positivePercentage);
-        out.printf("После индексации на %f%%, %s:%n", positivePercentage, groupIdentity);
+        out.printf("Результаты индексации на %f%%, %s:%n", positivePercentage, groupIdentity);
         out.println(employeeBook.toStringShort(true, division != null, true));
+    }
+
+    /**
+     * Демонстрация CRUD.
+     */
+    private static void performCRUD() {
+        out.println("performCRUD()%n");
+
+        final Person personNew = new Person(nameVerifier, "Новиков Никита Радуевич", "06.02.2004",
+                new Gender('-'));
+
+        var toRemove = employeeBook.getEmployee(3);
+        out.println("Сотрудник для удаления:" + toRemove);
+        if (toRemove == null) {
+            out.println("Сотрудник не найден.");
+            return;
+        }
+        employeeBook.removeEmployee(toRemove.getId());
+        out.println("Сотрудник удален.");
+
+        out.println("Список сотрудников после удаления:");
+        employeeBook.printEmployees(out, null);
+
+        out.println("Добавление нового сотрудника:");
+        employeeBook.addEmployee(new Employee(personNew, toRemove.getDivision(),
+                new Salary(10_000, salaryVerifier, null)));
+        employeeBook.printEmployees(out, null);
+
+        out.printf("Список сотрудников отдела %s:%n", toRemove.getDivision());
+        employeeBook.printEmployees(out, toRemove.getDivision());
     }
 }

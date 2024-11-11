@@ -17,7 +17,7 @@ public class SalaryVerifier {
     /**
      * Верхняя граница заработной платы.
      */
-    public static final double SALARY_MAX_DEFAULT = 1_500_000; // да куда уже больше
+    public static final double SALARY_MAX_DEFAULT = 2_500_000; // да куда уже больше
 
     /**
      * Нижняя граница заработной платы.

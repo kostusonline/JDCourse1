@@ -237,13 +237,13 @@ public final class Employee {
     public String toStringShort(boolean withId, boolean withDivision, boolean withSalary) {
         var sb = new StringBuilder();
         if (withId) {
-            sb.append(String.format("ID: %d, ", getId()));
+            sb.append(String.format("ID: %d", getId()));
         }
 
-        sb.append(String.format("%s, ", person.toStringShort()));
+        sb.append(String.format(", %s", person.toStringShort()));
 
         if (withDivision) {
-            sb.append(String.format("отдел %s", getDivision()));
+            sb.append(String.format(", отдел %s", getDivision()));
         }
 
         if (withSalary) {
